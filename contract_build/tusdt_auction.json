@@ -1,0 +1,3503 @@
+{
+  "source": {
+    "hash": "0xde1b59030bce05cc8d6e2377727e60e2650b8375738a95fb356c4688440f73b6",
+    "language": "ink! 5.1.1",
+    "compiler": "rustc 1.91.1",
+    "build_info": {
+      "build_mode": "Release",
+      "cargo_contract_version": "5.0.3",
+      "rust_toolchain": "stable-x86_64-unknown-linux-gnu",
+      "wasm_opt_settings": {
+        "keep_debug_symbols": false,
+        "optimization_passes": "Z"
+      }
+    }
+  },
+  "contract": {
+    "name": "tusdt-auction",
+    "version": "0.1.0",
+    "authors": [
+      "tensorusd admin@tensorusd.com"
+    ]
+  },
+  "image": null,
+  "spec": {
+    "constructors": [
+      {
+        "args": [
+          {
+            "label": "controller",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          },
+          {
+            "label": "governance",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          },
+          {
+            "label": "token_address",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          }
+        ],
+        "default": false,
+        "docs": [
+          "Initializes the auction contract with controller, governance, and token contract reference."
+        ],
+        "label": "new",
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink_primitives",
+            "ConstructorResult"
+          ],
+          "type": 40
+        },
+        "selector": "0x9bae9d5e"
+      }
+    ],
+    "docs": [],
+    "environment": {
+      "accountId": {
+        "displayName": [
+          "AccountId"
+        ],
+        "type": 0
+      },
+      "balance": {
+        "displayName": [
+          "Balance"
+        ],
+        "type": 4
+      },
+      "blockNumber": {
+        "displayName": [
+          "BlockNumber"
+        ],
+        "type": 3
+      },
+      "chainExtension": {
+        "displayName": [
+          "ChainExtension"
+        ],
+        "type": 65
+      },
+      "hash": {
+        "displayName": [
+          "Hash"
+        ],
+        "type": 64
+      },
+      "maxEventTopics": 4,
+      "staticBufferSize": 16384,
+      "timestamp": {
+        "displayName": [
+          "Timestamp"
+        ],
+        "type": 4
+      }
+    },
+    "events": [
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "auction_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 3
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "recipient",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "label": "amount",
+            "type": {
+              "displayName": [
+                "Balance"
+              ],
+              "type": 4
+            }
+          }
+        ],
+        "docs": [
+          "Emitted when the winning bid tokens are transferred out by the controller."
+        ],
+        "label": "WinningBidTransferred",
+        "module_path": "tusdt_auction::auction",
+        "signature_topic": "0x2453946cbe1f6032b08342168446e55733a50984aaed83e6915336a88b93032e"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "previous_governance",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "new_governance",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          }
+        ],
+        "docs": [
+          "Emitted when auction governance is transferred to a new account."
+        ],
+        "label": "AuctionGovernanceUpdated",
+        "module_path": "tusdt_auction::auction",
+        "signature_topic": "0x650e7dc10cf216636c442ddc7c09760c72b7152d8c3e9e56f48fd38c4ed0e637"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "auction_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 3
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "bid_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 3
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "bidder",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "label": "amount",
+            "type": {
+              "displayName": [
+                "Balance"
+              ],
+              "type": 4
+            }
+          }
+        ],
+        "docs": [
+          "Emitted when a bid is placed or raised on an auction."
+        ],
+        "label": "BidPlaced",
+        "module_path": "tusdt_auction::auction",
+        "signature_topic": "0x53773ad8dd764d7c2e273caf090006fa7ba6b468938259aa3d27ecd3b9b95f1b"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "admin",
+            "type": {
+              "displayName": [
+                "Option"
+              ],
+              "type": 10
+            }
+          }
+        ],
+        "docs": [
+          "Emitted when the admin account (allowed to bid on expired no-bid auctions) is updated."
+        ],
+        "label": "AdminUpdated",
+        "module_path": "tusdt_auction::auction",
+        "signature_topic": "0xd04478a9ddad3ba01e57d8112d890c26a28aca5c43c35dfb522ed2f0107cf985"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "auction_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 3
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "vault_owner",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "vault_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 3
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "label": "starts_at",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 4
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "label": "ends_at",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 4
+            }
+          }
+        ],
+        "docs": [
+          "Emitted when a new liquidation auction is created."
+        ],
+        "label": "AuctionCreated",
+        "module_path": "tusdt_auction::auction",
+        "signature_topic": "0x2d6206165e4527a66ee2e32d8b2fe44913914651cdd0fa449efd415b3b697558"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "bidder",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "label": "amount",
+            "type": {
+              "displayName": [
+                "Balance"
+              ],
+              "type": 4
+            }
+          }
+        ],
+        "docs": [
+          "Emitted when a losing bidder withdraws their refund."
+        ],
+        "label": "RefundWithdrawn",
+        "module_path": "tusdt_auction::auction",
+        "signature_topic": "0x6040b9f8282871cf9199cf80cc6df679351435d48bc8743ad81a192b1f665d23"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "auction_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 3
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "winner",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "label": "highest_bid",
+            "type": {
+              "displayName": [
+                "Balance"
+              ],
+              "type": 4
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "label": "debt_balance",
+            "type": {
+              "displayName": [
+                "Balance"
+              ],
+              "type": 4
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "label": "highest_bid_metadata",
+            "type": {
+              "displayName": [
+                "Option"
+              ],
+              "type": 19
+            }
+          }
+        ],
+        "docs": [
+          "Emitted when an auction is finalized, identifying the winning bidder."
+        ],
+        "label": "AuctionFinalized",
+        "module_path": "tusdt_auction::auction",
+        "signature_topic": "0x2bb1b99d11a544c4702e6bb53e1eaea4a6f257ac8d2e41b9c747027662fadd53"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "owner",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "spender",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "label": "value",
+            "type": {
+              "displayName": [
+                "Balance"
+              ],
+              "type": 4
+            }
+          }
+        ],
+        "docs": [
+          "Emitted whenever an owner sets or updates a spender's allowance."
+        ],
+        "label": "Approval",
+        "module_path": "tusdt_erc20::tusdt",
+        "signature_topic": "0x1a35e726f5feffda199144f6097b2ba23713e549bfcbe090c0981e3bcdfbcc1d"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "from",
+            "type": {
+              "displayName": [
+                "Option"
+              ],
+              "type": 10
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "to",
+            "type": {
+              "displayName": [
+                "Option"
+              ],
+              "type": 10
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "label": "value",
+            "type": {
+              "displayName": [
+                "Balance"
+              ],
+              "type": 4
+            }
+          }
+        ],
+        "docs": [
+          "Emitted on token movement; `from = None` denotes a mint, `to = None` denotes a burn."
+        ],
+        "label": "Transfer",
+        "module_path": "tusdt_erc20::tusdt",
+        "signature_topic": "0xb5b61a3e6a21a16be4f044b517c28ac692492f73c5bfd3f60178ad98c767f4cb"
+      }
+    ],
+    "lang_error": {
+      "displayName": [
+        "ink",
+        "LangError"
+      ],
+      "type": 41
+    },
+    "messages": [
+      {
+        "args": [
+          {
+            "label": "vault_owner",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          },
+          {
+            "label": "vault_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 3
+            }
+          },
+          {
+            "label": "collateral_balance",
+            "type": {
+              "displayName": [
+                "Balance"
+              ],
+              "type": 4
+            }
+          },
+          {
+            "label": "debt_balance",
+            "type": {
+              "displayName": [
+                "Balance"
+              ],
+              "type": 4
+            }
+          },
+          {
+            "label": "min_bid",
+            "type": {
+              "displayName": [
+                "Balance"
+              ],
+              "type": 4
+            }
+          },
+          {
+            "label": "liquidation_price",
+            "type": {
+              "displayName": [
+                "Ratio"
+              ],
+              "type": 9
+            }
+          },
+          {
+            "label": "duration_ms",
+            "type": {
+              "displayName": [
+                "Option"
+              ],
+              "type": 42
+            }
+          }
+        ],
+        "default": false,
+        "docs": [
+          " Creates a new liquidation auction for a vault with specified collateral and debt, returning the auction ID."
+        ],
+        "label": "create_auction",
+        "mutates": true,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 43
+        },
+        "selector": "0xd6cd59d7"
+      },
+      {
+        "args": [
+          {
+            "label": "admin",
+            "type": {
+              "displayName": [
+                "Option"
+              ],
+              "type": 10
+            }
+          }
+        ],
+        "default": false,
+        "docs": [
+          " Sets or clears the admin account that may bid on expired no-bid auctions; governance-only."
+        ],
+        "label": "set_admin",
+        "mutates": true,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 46
+        },
+        "selector": "0x798dcad5"
+      },
+      {
+        "args": [
+          {
+            "label": "new_governance",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          }
+        ],
+        "default": false,
+        "docs": [
+          " Transfers auction governance to a new account; controller-only."
+        ],
+        "label": "update_governance",
+        "mutates": true,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 46
+        },
+        "selector": "0xc33c8b6a"
+      },
+      {
+        "args": [
+          {
+            "label": "auction_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 3
+            }
+          },
+          {
+            "label": "bid_amount",
+            "type": {
+              "displayName": [
+                "Balance"
+              ],
+              "type": 4
+            }
+          },
+          {
+            "label": "metadata",
+            "type": {
+              "displayName": [
+                "Option"
+              ],
+              "type": 19
+            }
+          }
+        ],
+        "default": false,
+        "docs": [
+          " Places a bid on an auction, transferring the bid amount and updating the highest bid if applicable."
+        ],
+        "label": "place_bid",
+        "mutates": true,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 43
+        },
+        "selector": "0x441cccf2"
+      },
+      {
+        "args": [
+          {
+            "label": "auction_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 3
+            }
+          }
+        ],
+        "default": false,
+        "docs": [
+          " Finalizes an auction after it has ended, marking the highest bidder as winner."
+        ],
+        "label": "finalize_auction",
+        "mutates": true,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 46
+        },
+        "selector": "0x28dd27b4"
+      },
+      {
+        "args": [
+          {
+            "label": "auction_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 3
+            }
+          },
+          {
+            "label": "recipient",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          }
+        ],
+        "default": false,
+        "docs": [
+          " Transfers the winning bid out of the auction contract after finalization; only callable by the controller."
+        ],
+        "label": "transfer_winning_bid",
+        "mutates": true,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 48
+        },
+        "selector": "0x02695935"
+      },
+      {
+        "args": [
+          {
+            "label": "auction_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 3
+            }
+          },
+          {
+            "label": "bid_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 3
+            }
+          }
+        ],
+        "default": false,
+        "docs": [
+          " Withdraws refund for a losing bid after the auction is finalized."
+        ],
+        "label": "withdraw_refund",
+        "mutates": true,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 46
+        },
+        "selector": "0xb98ba333"
+      },
+      {
+        "args": [
+          {
+            "label": "auction_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 3
+            }
+          }
+        ],
+        "default": false,
+        "docs": [
+          " Retrieves the details of an auction by its ID."
+        ],
+        "label": "get_auction",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 50
+        },
+        "selector": "0x15a41cb5"
+      },
+      {
+        "args": [
+          {
+            "label": "vault_owner",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          },
+          {
+            "label": "vault_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 3
+            }
+          }
+        ],
+        "default": false,
+        "docs": [
+          " Returns the active auction ID for a vault, or None if no active auction exists."
+        ],
+        "label": "get_active_vault_auction",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 52
+        },
+        "selector": "0x9b023efc"
+      },
+      {
+        "args": [
+          {
+            "label": "auction_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 3
+            }
+          },
+          {
+            "label": "bid_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 3
+            }
+          }
+        ],
+        "default": false,
+        "docs": [
+          " Retrieves a specific bid from an auction by auction ID and bid ID."
+        ],
+        "label": "get_bid",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 53
+        },
+        "selector": "0xdc2d27f1"
+      },
+      {
+        "args": [
+          {
+            "label": "auction_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 3
+            }
+          },
+          {
+            "label": "bidder",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          }
+        ],
+        "default": false,
+        "docs": [
+          " Retrieves a specific bid from an auction by auction ID and Bidder."
+        ],
+        "label": "get_auction_bid",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 53
+        },
+        "selector": "0xa594e324"
+      },
+      {
+        "args": [
+          {
+            "label": "auction_id",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 3
+            }
+          },
+          {
+            "label": "page",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 3
+            }
+          }
+        ],
+        "default": false,
+        "docs": [
+          " Returns a paginated list of all bids placed on an auction."
+        ],
+        "label": "get_bids",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 55
+        },
+        "selector": "0x03302346"
+      },
+      {
+        "args": [],
+        "default": false,
+        "docs": [
+          " Returns the total number of auctions created."
+        ],
+        "label": "get_total_auctions_count",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 58
+        },
+        "selector": "0x2700a61f"
+      },
+      {
+        "args": [],
+        "default": false,
+        "docs": [
+          " Returns the total number of active auctions."
+        ],
+        "label": "get_active_auctions_count",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 58
+        },
+        "selector": "0x996f931c"
+      },
+      {
+        "args": [
+          {
+            "label": "page",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 3
+            }
+          }
+        ],
+        "default": false,
+        "docs": [
+          " Returns a paginated list of all auctions."
+        ],
+        "label": "get_all_auctions",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 59
+        },
+        "selector": "0x95baa3db"
+      },
+      {
+        "args": [
+          {
+            "label": "page",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 3
+            }
+          }
+        ],
+        "default": false,
+        "docs": [
+          " Returns a paginated list of active auctions."
+        ],
+        "label": "get_active_auctions",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 59
+        },
+        "selector": "0x038c0d69"
+      },
+      {
+        "args": [],
+        "default": false,
+        "docs": [
+          " Returns the controller account ID."
+        ],
+        "label": "controller",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 62
+        },
+        "selector": "0x7b3bfba9"
+      },
+      {
+        "args": [],
+        "default": false,
+        "docs": [
+          " Returns the governance account ID."
+        ],
+        "label": "governance",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 62
+        },
+        "selector": "0x9f90cf17"
+      },
+      {
+        "args": [],
+        "default": false,
+        "docs": [
+          " Returns the admin account ID."
+        ],
+        "label": "admin",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 63
+        },
+        "selector": "0x1aa66b39"
+      }
+    ]
+  },
+  "storage": {
+    "root": {
+      "layout": {
+        "struct": {
+          "fields": [
+            {
+              "layout": {
+                "leaf": {
+                  "key": "0x00000000",
+                  "ty": 0
+                }
+              },
+              "name": "controller"
+            },
+            {
+              "layout": {
+                "leaf": {
+                  "key": "0x00000000",
+                  "ty": 0
+                }
+              },
+              "name": "governance"
+            },
+            {
+              "layout": {
+                "enum": {
+                  "dispatchKey": "0x00000000",
+                  "name": "Option",
+                  "variants": {
+                    "0": {
+                      "fields": [],
+                      "name": "None"
+                    },
+                    "1": {
+                      "fields": [
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0x00000000",
+                              "ty": 0
+                            }
+                          },
+                          "name": "0"
+                        }
+                      ],
+                      "name": "Some"
+                    }
+                  }
+                }
+              },
+              "name": "admin"
+            },
+            {
+              "layout": {
+                "struct": {
+                  "fields": [
+                    {
+                      "layout": {
+                        "struct": {
+                          "fields": [
+                            {
+                              "layout": {
+                                "leaf": {
+                                  "key": "0x00000000",
+                                  "ty": 0
+                                }
+                              },
+                              "name": "account_id"
+                            }
+                          ],
+                          "name": "CallBuilder"
+                        }
+                      },
+                      "name": "inner"
+                    }
+                  ],
+                  "name": "TusdtErc20Ref"
+                }
+              },
+              "name": "token"
+            },
+            {
+              "layout": {
+                "leaf": {
+                  "key": "0x00000000",
+                  "ty": 3
+                }
+              },
+              "name": "auction_count"
+            },
+            {
+              "layout": {
+                "root": {
+                  "layout": {
+                    "struct": {
+                      "fields": [
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0x67232727",
+                              "ty": 3
+                            }
+                          },
+                          "name": "id"
+                        },
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0x67232727",
+                              "ty": 0
+                            }
+                          },
+                          "name": "vault_owner"
+                        },
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0x67232727",
+                              "ty": 3
+                            }
+                          },
+                          "name": "vault_id"
+                        },
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0x67232727",
+                              "ty": 4
+                            }
+                          },
+                          "name": "collateral_balance"
+                        },
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0x67232727",
+                              "ty": 4
+                            }
+                          },
+                          "name": "debt_balance"
+                        },
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0x67232727",
+                              "ty": 4
+                            }
+                          },
+                          "name": "min_bid"
+                        },
+                        {
+                          "layout": {
+                            "struct": {
+                              "fields": [
+                                {
+                                  "layout": {
+                                    "leaf": {
+                                      "key": "0x67232727",
+                                      "ty": 5
+                                    }
+                                  },
+                                  "name": "0"
+                                }
+                              ],
+                              "name": "Ratio"
+                            }
+                          },
+                          "name": "liquidation_price"
+                        },
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0x67232727",
+                              "ty": 4
+                            }
+                          },
+                          "name": "starts_at"
+                        },
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0x67232727",
+                              "ty": 4
+                            }
+                          },
+                          "name": "ends_at"
+                        },
+                        {
+                          "layout": {
+                            "enum": {
+                              "dispatchKey": "0x67232727",
+                              "name": "Option",
+                              "variants": {
+                                "0": {
+                                  "fields": [],
+                                  "name": "None"
+                                },
+                                "1": {
+                                  "fields": [
+                                    {
+                                      "layout": {
+                                        "leaf": {
+                                          "key": "0x67232727",
+                                          "ty": 0
+                                        }
+                                      },
+                                      "name": "0"
+                                    }
+                                  ],
+                                  "name": "Some"
+                                }
+                              }
+                            }
+                          },
+                          "name": "highest_bidder"
+                        },
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0x67232727",
+                              "ty": 4
+                            }
+                          },
+                          "name": "highest_bid"
+                        },
+                        {
+                          "layout": {
+                            "enum": {
+                              "dispatchKey": "0x67232727",
+                              "name": "Option",
+                              "variants": {
+                                "0": {
+                                  "fields": [],
+                                  "name": "None"
+                                },
+                                "1": {
+                                  "fields": [
+                                    {
+                                      "layout": {
+                                        "leaf": {
+                                          "key": "0x67232727",
+                                          "ty": 3
+                                        }
+                                      },
+                                      "name": "0"
+                                    }
+                                  ],
+                                  "name": "Some"
+                                }
+                              }
+                            }
+                          },
+                          "name": "highest_bid_id"
+                        },
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0x67232727",
+                              "ty": 3
+                            }
+                          },
+                          "name": "bid_count"
+                        },
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0x67232727",
+                              "ty": 6
+                            }
+                          },
+                          "name": "is_finalized"
+                        }
+                      ],
+                      "name": "Auction"
+                    }
+                  },
+                  "root_key": "0x67232727",
+                  "ty": 7
+                }
+              },
+              "name": "auctions"
+            },
+            {
+              "layout": {
+                "root": {
+                  "layout": {
+                    "struct": {
+                      "fields": [
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0xe8c23a7a",
+                              "ty": 3
+                            }
+                          },
+                          "name": "id"
+                        },
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0xe8c23a7a",
+                              "ty": 3
+                            }
+                          },
+                          "name": "auction_id"
+                        },
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0xe8c23a7a",
+                              "ty": 0
+                            }
+                          },
+                          "name": "bidder"
+                        },
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0xe8c23a7a",
+                              "ty": 4
+                            }
+                          },
+                          "name": "amount"
+                        },
+                        {
+                          "layout": {
+                            "enum": {
+                              "dispatchKey": "0xe8c23a7a",
+                              "name": "Option",
+                              "variants": {
+                                "0": {
+                                  "fields": [],
+                                  "name": "None"
+                                },
+                                "1": {
+                                  "fields": [
+                                    {
+                                      "layout": {
+                                        "struct": {
+                                          "fields": [
+                                            {
+                                              "layout": {
+                                                "leaf": {
+                                                  "key": "0xe8c23a7a",
+                                                  "ty": 0
+                                                }
+                                              },
+                                              "name": "hot_key"
+                                            }
+                                          ],
+                                          "name": "BidMetadata"
+                                        }
+                                      },
+                                      "name": "0"
+                                    }
+                                  ],
+                                  "name": "Some"
+                                }
+                              }
+                            }
+                          },
+                          "name": "metadata"
+                        },
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0xe8c23a7a",
+                              "ty": 6
+                            }
+                          },
+                          "name": "is_withdrawn"
+                        }
+                      ],
+                      "name": "Bid"
+                    }
+                  },
+                  "root_key": "0xe8c23a7a",
+                  "ty": 16
+                }
+              },
+              "name": "auction_bids"
+            },
+            {
+              "layout": {
+                "root": {
+                  "layout": {
+                    "leaf": {
+                      "key": "0x68dcca1b",
+                      "ty": 3
+                    }
+                  },
+                  "root_key": "0x68dcca1b",
+                  "ty": 23
+                }
+              },
+              "name": "auction_bidder_bids"
+            },
+            {
+              "layout": {
+                "root": {
+                  "layout": {
+                    "leaf": {
+                      "key": "0xafa18ddb",
+                      "ty": 3
+                    }
+                  },
+                  "root_key": "0xafa18ddb",
+                  "ty": 27
+                }
+              },
+              "name": "active_vault_auction"
+            },
+            {
+              "layout": {
+                "leaf": {
+                  "key": "0x00000000",
+                  "ty": 3
+                }
+              },
+              "name": "active_auction_count"
+            },
+            {
+              "layout": {
+                "root": {
+                  "layout": {
+                    "leaf": {
+                      "key": "0xd9c4d144",
+                      "ty": 3
+                    }
+                  },
+                  "root_key": "0xd9c4d144",
+                  "ty": 31
+                }
+              },
+              "name": "active_auctions"
+            },
+            {
+              "layout": {
+                "root": {
+                  "layout": {
+                    "leaf": {
+                      "key": "0xf0e8b11f",
+                      "ty": 3
+                    }
+                  },
+                  "root_key": "0xf0e8b11f",
+                  "ty": 34
+                }
+              },
+              "name": "active_auction_indices"
+            }
+          ],
+          "name": "TusdtAuction"
+        }
+      },
+      "root_key": "0x00000000",
+      "ty": 37
+    }
+  },
+  "types": [
+    {
+      "id": 0,
+      "type": {
+        "def": {
+          "composite": {
+            "fields": [
+              {
+                "type": 1,
+                "typeName": "[u8; 32]"
+              }
+            ]
+          }
+        },
+        "path": [
+          "ink_primitives",
+          "types",
+          "AccountId"
+        ]
+      }
+    },
+    {
+      "id": 1,
+      "type": {
+        "def": {
+          "array": {
+            "len": 32,
+            "type": 2
+          }
+        }
+      }
+    },
+    {
+      "id": 2,
+      "type": {
+        "def": {
+          "primitive": "u8"
+        }
+      }
+    },
+    {
+      "id": 3,
+      "type": {
+        "def": {
+          "primitive": "u32"
+        }
+      }
+    },
+    {
+      "id": 4,
+      "type": {
+        "def": {
+          "primitive": "u64"
+        }
+      }
+    },
+    {
+      "id": 5,
+      "type": {
+        "def": {
+          "primitive": "u128"
+        }
+      }
+    },
+    {
+      "id": 6,
+      "type": {
+        "def": {
+          "primitive": "bool"
+        }
+      }
+    },
+    {
+      "id": 7,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "K",
+            "type": 3
+          },
+          {
+            "name": "V",
+            "type": 8
+          },
+          {
+            "name": "KeyType",
+            "type": 12
+          }
+        ],
+        "path": [
+          "ink_storage",
+          "lazy",
+          "mapping",
+          "Mapping"
+        ]
+      }
+    },
+    {
+      "id": 8,
+      "type": {
+        "def": {
+          "composite": {
+            "fields": [
+              {
+                "name": "id",
+                "type": 3,
+                "typeName": "u32"
+              },
+              {
+                "name": "vault_owner",
+                "type": 0,
+                "typeName": "AccountId"
+              },
+              {
+                "name": "vault_id",
+                "type": 3,
+                "typeName": "u32"
+              },
+              {
+                "name": "collateral_balance",
+                "type": 4,
+                "typeName": "Balance"
+              },
+              {
+                "name": "debt_balance",
+                "type": 4,
+                "typeName": "Balance"
+              },
+              {
+                "name": "min_bid",
+                "type": 4,
+                "typeName": "Balance"
+              },
+              {
+                "name": "liquidation_price",
+                "type": 9,
+                "typeName": "Ratio"
+              },
+              {
+                "name": "starts_at",
+                "type": 4,
+                "typeName": "u64"
+              },
+              {
+                "name": "ends_at",
+                "type": 4,
+                "typeName": "u64"
+              },
+              {
+                "name": "highest_bidder",
+                "type": 10,
+                "typeName": "Option<AccountId>"
+              },
+              {
+                "name": "highest_bid",
+                "type": 4,
+                "typeName": "Balance"
+              },
+              {
+                "name": "highest_bid_id",
+                "type": 11,
+                "typeName": "Option<u32>"
+              },
+              {
+                "name": "bid_count",
+                "type": 3,
+                "typeName": "u32"
+              },
+              {
+                "name": "is_finalized",
+                "type": 6,
+                "typeName": "bool"
+              }
+            ]
+          }
+        },
+        "path": [
+          "tusdt_auction",
+          "auction",
+          "Auction"
+        ]
+      }
+    },
+    {
+      "id": 9,
+      "type": {
+        "def": {
+          "composite": {
+            "fields": [
+              {
+                "type": 5,
+                "typeName": "u128"
+              }
+            ]
+          }
+        },
+        "path": [
+          "tusdt_primitives",
+          "Ratio"
+        ]
+      }
+    },
+    {
+      "id": 10,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "index": 0,
+                "name": "None"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 0
+                  }
+                ],
+                "index": 1,
+                "name": "Some"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 0
+          }
+        ],
+        "path": [
+          "Option"
+        ]
+      }
+    },
+    {
+      "id": 11,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "index": 0,
+                "name": "None"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 3
+                  }
+                ],
+                "index": 1,
+                "name": "Some"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 3
+          }
+        ],
+        "path": [
+          "Option"
+        ]
+      }
+    },
+    {
+      "id": 12,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "L",
+            "type": 13
+          },
+          {
+            "name": "R",
+            "type": 14
+          }
+        ],
+        "path": [
+          "ink_storage_traits",
+          "impls",
+          "ResolverKey"
+        ]
+      }
+    },
+    {
+      "id": 13,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "path": [
+          "ink_storage_traits",
+          "impls",
+          "AutoKey"
+        ]
+      }
+    },
+    {
+      "id": 14,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "ParentKey",
+            "type": 15
+          }
+        ],
+        "path": [
+          "ink_storage_traits",
+          "impls",
+          "ManualKey"
+        ]
+      }
+    },
+    {
+      "id": 15,
+      "type": {
+        "def": {
+          "tuple": []
+        }
+      }
+    },
+    {
+      "id": 16,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "K",
+            "type": 17
+          },
+          {
+            "name": "V",
+            "type": 18
+          },
+          {
+            "name": "KeyType",
+            "type": 21
+          }
+        ],
+        "path": [
+          "ink_storage",
+          "lazy",
+          "mapping",
+          "Mapping"
+        ]
+      }
+    },
+    {
+      "id": 17,
+      "type": {
+        "def": {
+          "tuple": [
+            3,
+            3
+          ]
+        }
+      }
+    },
+    {
+      "id": 18,
+      "type": {
+        "def": {
+          "composite": {
+            "fields": [
+              {
+                "name": "id",
+                "type": 3,
+                "typeName": "u32"
+              },
+              {
+                "name": "auction_id",
+                "type": 3,
+                "typeName": "u32"
+              },
+              {
+                "name": "bidder",
+                "type": 0,
+                "typeName": "AccountId"
+              },
+              {
+                "name": "amount",
+                "type": 4,
+                "typeName": "Balance"
+              },
+              {
+                "name": "metadata",
+                "type": 19,
+                "typeName": "Option<BidMetadata>"
+              },
+              {
+                "name": "is_withdrawn",
+                "type": 6,
+                "typeName": "bool"
+              }
+            ]
+          }
+        },
+        "path": [
+          "tusdt_auction",
+          "auction",
+          "Bid"
+        ]
+      }
+    },
+    {
+      "id": 19,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "index": 0,
+                "name": "None"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 20
+                  }
+                ],
+                "index": 1,
+                "name": "Some"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 20
+          }
+        ],
+        "path": [
+          "Option"
+        ]
+      }
+    },
+    {
+      "id": 20,
+      "type": {
+        "def": {
+          "composite": {
+            "fields": [
+              {
+                "name": "hot_key",
+                "type": 0,
+                "typeName": "AccountId"
+              }
+            ]
+          }
+        },
+        "path": [
+          "tusdt_auction",
+          "auction",
+          "BidMetadata"
+        ]
+      }
+    },
+    {
+      "id": 21,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "L",
+            "type": 13
+          },
+          {
+            "name": "R",
+            "type": 22
+          }
+        ],
+        "path": [
+          "ink_storage_traits",
+          "impls",
+          "ResolverKey"
+        ]
+      }
+    },
+    {
+      "id": 22,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "ParentKey",
+            "type": 15
+          }
+        ],
+        "path": [
+          "ink_storage_traits",
+          "impls",
+          "ManualKey"
+        ]
+      }
+    },
+    {
+      "id": 23,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "K",
+            "type": 24
+          },
+          {
+            "name": "V",
+            "type": 3
+          },
+          {
+            "name": "KeyType",
+            "type": 25
+          }
+        ],
+        "path": [
+          "ink_storage",
+          "lazy",
+          "mapping",
+          "Mapping"
+        ]
+      }
+    },
+    {
+      "id": 24,
+      "type": {
+        "def": {
+          "tuple": [
+            3,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "id": 25,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "L",
+            "type": 13
+          },
+          {
+            "name": "R",
+            "type": 26
+          }
+        ],
+        "path": [
+          "ink_storage_traits",
+          "impls",
+          "ResolverKey"
+        ]
+      }
+    },
+    {
+      "id": 26,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "ParentKey",
+            "type": 15
+          }
+        ],
+        "path": [
+          "ink_storage_traits",
+          "impls",
+          "ManualKey"
+        ]
+      }
+    },
+    {
+      "id": 27,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "K",
+            "type": 28
+          },
+          {
+            "name": "V",
+            "type": 3
+          },
+          {
+            "name": "KeyType",
+            "type": 29
+          }
+        ],
+        "path": [
+          "ink_storage",
+          "lazy",
+          "mapping",
+          "Mapping"
+        ]
+      }
+    },
+    {
+      "id": 28,
+      "type": {
+        "def": {
+          "tuple": [
+            0,
+            3
+          ]
+        }
+      }
+    },
+    {
+      "id": 29,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "L",
+            "type": 13
+          },
+          {
+            "name": "R",
+            "type": 30
+          }
+        ],
+        "path": [
+          "ink_storage_traits",
+          "impls",
+          "ResolverKey"
+        ]
+      }
+    },
+    {
+      "id": 30,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "ParentKey",
+            "type": 15
+          }
+        ],
+        "path": [
+          "ink_storage_traits",
+          "impls",
+          "ManualKey"
+        ]
+      }
+    },
+    {
+      "id": 31,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "K",
+            "type": 3
+          },
+          {
+            "name": "V",
+            "type": 3
+          },
+          {
+            "name": "KeyType",
+            "type": 32
+          }
+        ],
+        "path": [
+          "ink_storage",
+          "lazy",
+          "mapping",
+          "Mapping"
+        ]
+      }
+    },
+    {
+      "id": 32,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "L",
+            "type": 13
+          },
+          {
+            "name": "R",
+            "type": 33
+          }
+        ],
+        "path": [
+          "ink_storage_traits",
+          "impls",
+          "ResolverKey"
+        ]
+      }
+    },
+    {
+      "id": 33,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "ParentKey",
+            "type": 15
+          }
+        ],
+        "path": [
+          "ink_storage_traits",
+          "impls",
+          "ManualKey"
+        ]
+      }
+    },
+    {
+      "id": 34,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "K",
+            "type": 3
+          },
+          {
+            "name": "V",
+            "type": 3
+          },
+          {
+            "name": "KeyType",
+            "type": 35
+          }
+        ],
+        "path": [
+          "ink_storage",
+          "lazy",
+          "mapping",
+          "Mapping"
+        ]
+      }
+    },
+    {
+      "id": 35,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "L",
+            "type": 13
+          },
+          {
+            "name": "R",
+            "type": 36
+          }
+        ],
+        "path": [
+          "ink_storage_traits",
+          "impls",
+          "ResolverKey"
+        ]
+      }
+    },
+    {
+      "id": 36,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "ParentKey",
+            "type": 15
+          }
+        ],
+        "path": [
+          "ink_storage_traits",
+          "impls",
+          "ManualKey"
+        ]
+      }
+    },
+    {
+      "id": 37,
+      "type": {
+        "def": {
+          "composite": {
+            "fields": [
+              {
+                "name": "controller",
+                "type": 0,
+                "typeName": "<AccountId as::ink::storage::traits::AutoStorableHint<::ink::\nstorage::traits::ManualKey<1832586615u32, ()>,>>::Type"
+              },
+              {
+                "name": "governance",
+                "type": 0,
+                "typeName": "<AccountId as::ink::storage::traits::AutoStorableHint<::ink::\nstorage::traits::ManualKey<2603982200u32, ()>,>>::Type"
+              },
+              {
+                "name": "admin",
+                "type": 10,
+                "typeName": "<Option<AccountId> as::ink::storage::traits::AutoStorableHint<::\nink::storage::traits::ManualKey<2591091493u32, ()>,>>::Type"
+              },
+              {
+                "name": "token",
+                "type": 38,
+                "typeName": "<TusdtErc20Ref as::ink::storage::traits::AutoStorableHint<::ink::\nstorage::traits::ManualKey<1727889415u32, ()>,>>::Type"
+              },
+              {
+                "name": "auction_count",
+                "type": 3,
+                "typeName": "<u32 as::ink::storage::traits::AutoStorableHint<::ink::storage\n::traits::ManualKey<499704048u32, ()>,>>::Type"
+              },
+              {
+                "name": "auctions",
+                "type": 7,
+                "typeName": "<Mapping<u32, Auction> as::ink::storage::traits::AutoStorableHint\n<::ink::storage::traits::ManualKey<656876391u32, ()>,>>::Type"
+              },
+              {
+                "name": "auction_bids",
+                "type": 16,
+                "typeName": "<Mapping<(u32, u32), Bid> as::ink::storage::traits::\nAutoStorableHint<::ink::storage::traits::ManualKey<2050671336u32,\n()>,>>::Type"
+              },
+              {
+                "name": "auction_bidder_bids",
+                "type": 23,
+                "typeName": "<Mapping<(u32, AccountId), u32> as::ink::storage::traits::\nAutoStorableHint<::ink::storage::traits::ManualKey<466279528u32, ()\n>,>>::Type"
+              },
+              {
+                "name": "active_vault_auction",
+                "type": 27,
+                "typeName": "<Mapping<(AccountId, u32), u32> as::ink::storage::traits::\nAutoStorableHint<::ink::storage::traits::ManualKey<3683492271u32,\n()>,>>::Type"
+              },
+              {
+                "name": "active_auction_count",
+                "type": 3,
+                "typeName": "<u32 as::ink::storage::traits::AutoStorableHint<::ink::storage\n::traits::ManualKey<1270093962u32, ()>,>>::Type"
+              },
+              {
+                "name": "active_auctions",
+                "type": 31,
+                "typeName": "<Mapping<u32, u32> as::ink::storage::traits::AutoStorableHint<::\nink::storage::traits::ManualKey<1154598105u32, ()>,>>::Type"
+              },
+              {
+                "name": "active_auction_indices",
+                "type": 34,
+                "typeName": "<Mapping<u32, u32> as::ink::storage::traits::AutoStorableHint<::\nink::storage::traits::ManualKey<531753200u32, ()>,>>::Type"
+              }
+            ]
+          }
+        },
+        "path": [
+          "tusdt_auction",
+          "auction",
+          "TusdtAuction"
+        ]
+      }
+    },
+    {
+      "id": 38,
+      "type": {
+        "def": {
+          "composite": {
+            "fields": [
+              {
+                "name": "inner",
+                "type": 39,
+                "typeName": "<TusdtErc20 as::ink::codegen::ContractCallBuilder>::Type"
+              }
+            ]
+          }
+        },
+        "path": [
+          "tusdt_erc20",
+          "tusdt",
+          "TusdtErc20Ref"
+        ]
+      }
+    },
+    {
+      "id": 39,
+      "type": {
+        "def": {
+          "composite": {
+            "fields": [
+              {
+                "name": "account_id",
+                "type": 0,
+                "typeName": "AccountId"
+              }
+            ]
+          }
+        },
+        "path": [
+          "tusdt_erc20",
+          "tusdt",
+          "CallBuilder"
+        ]
+      }
+    },
+    {
+      "id": 40,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 15
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 41
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 15
+          },
+          {
+            "name": "E",
+            "type": 41
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 41,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "index": 1,
+                "name": "CouldNotReadInput"
+              }
+            ]
+          }
+        },
+        "path": [
+          "ink_primitives",
+          "LangError"
+        ]
+      }
+    },
+    {
+      "id": 42,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "index": 0,
+                "name": "None"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 4
+                  }
+                ],
+                "index": 1,
+                "name": "Some"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 4
+          }
+        ],
+        "path": [
+          "Option"
+        ]
+      }
+    },
+    {
+      "id": 43,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 44
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 41
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 44
+          },
+          {
+            "name": "E",
+            "type": 41
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 44,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 3
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 45
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 3
+          },
+          {
+            "name": "E",
+            "type": 45
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 45,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "index": 0,
+                "name": "NotController"
+              },
+              {
+                "index": 1,
+                "name": "NotGovernance"
+              },
+              {
+                "index": 2,
+                "name": "NotAdmin"
+              },
+              {
+                "index": 3,
+                "name": "AuctionNotFound"
+              },
+              {
+                "index": 4,
+                "name": "BidNotFound"
+              },
+              {
+                "index": 5,
+                "name": "NotBidder"
+              },
+              {
+                "index": 6,
+                "name": "AuctionAlreadyExistsForVault"
+              },
+              {
+                "index": 7,
+                "name": "BidBelowMinBid"
+              },
+              {
+                "index": 8,
+                "name": "AuctionEnded"
+              },
+              {
+                "index": 9,
+                "name": "AuctionNotEnded"
+              },
+              {
+                "index": 10,
+                "name": "AuctionFinalized"
+              },
+              {
+                "index": 11,
+                "name": "AuctionHasNoBids"
+              },
+              {
+                "index": 12,
+                "name": "WinningBidLocked"
+              },
+              {
+                "index": 13,
+                "name": "WinningBidAlreadyTransferred"
+              },
+              {
+                "index": 14,
+                "name": "InvalidDuration"
+              },
+              {
+                "index": 15,
+                "name": "TransferFailed"
+              },
+              {
+                "index": 16,
+                "name": "NoRefundAvailable"
+              },
+              {
+                "index": 17,
+                "name": "BidAmountNotIncreased"
+              },
+              {
+                "index": 18,
+                "name": "ArithmeticError"
+              }
+            ]
+          }
+        },
+        "path": [
+          "tusdt_auction",
+          "auction",
+          "Error"
+        ]
+      }
+    },
+    {
+      "id": 46,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 47
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 41
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 47
+          },
+          {
+            "name": "E",
+            "type": 41
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 47,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 15
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 45
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 15
+          },
+          {
+            "name": "E",
+            "type": 45
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 48,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 49
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 41
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 49
+          },
+          {
+            "name": "E",
+            "type": 41
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 49,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 4
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 45
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 4
+          },
+          {
+            "name": "E",
+            "type": 45
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 50,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 51
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 41
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 51
+          },
+          {
+            "name": "E",
+            "type": 41
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 51,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "index": 0,
+                "name": "None"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 8
+                  }
+                ],
+                "index": 1,
+                "name": "Some"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 8
+          }
+        ],
+        "path": [
+          "Option"
+        ]
+      }
+    },
+    {
+      "id": 52,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 11
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 41
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 11
+          },
+          {
+            "name": "E",
+            "type": 41
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 53,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 54
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 41
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 54
+          },
+          {
+            "name": "E",
+            "type": 41
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 54,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "index": 0,
+                "name": "None"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 18
+                  }
+                ],
+                "index": 1,
+                "name": "Some"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 18
+          }
+        ],
+        "path": [
+          "Option"
+        ]
+      }
+    },
+    {
+      "id": 55,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 56
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 41
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 56
+          },
+          {
+            "name": "E",
+            "type": 41
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 56,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 57
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 45
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 57
+          },
+          {
+            "name": "E",
+            "type": 45
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 57,
+      "type": {
+        "def": {
+          "sequence": {
+            "type": 18
+          }
+        }
+      }
+    },
+    {
+      "id": 58,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 3
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 41
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 3
+          },
+          {
+            "name": "E",
+            "type": 41
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 59,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 60
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 41
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 60
+          },
+          {
+            "name": "E",
+            "type": 41
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 60,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 61
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 45
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 61
+          },
+          {
+            "name": "E",
+            "type": 45
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 61,
+      "type": {
+        "def": {
+          "sequence": {
+            "type": 8
+          }
+        }
+      }
+    },
+    {
+      "id": 62,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 0
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 41
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 0
+          },
+          {
+            "name": "E",
+            "type": 41
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 63,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 10
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 41
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 10
+          },
+          {
+            "name": "E",
+            "type": 41
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 64,
+      "type": {
+        "def": {
+          "composite": {
+            "fields": [
+              {
+                "type": 1,
+                "typeName": "[u8; 32]"
+              }
+            ]
+          }
+        },
+        "path": [
+          "ink_primitives",
+          "types",
+          "Hash"
+        ]
+      }
+    },
+    {
+      "id": 65,
+      "type": {
+        "def": {
+          "variant": {}
+        },
+        "path": [
+          "tusdt_env",
+          "RuntimeReadWrite"
+        ]
+      }
+    }
+  ],
+  "version": 5
+}

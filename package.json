@@ -1,0 +1,29 @@
+{
+  "name": "contract-deploy",
+  "version": "1.0.0",
+  "description": "Dedot-based deployment scripts for tUSDT contracts",
+  "type": "module",
+  "scripts": {
+    "deploy:vault": "tsx src/deploy-vault.ts",
+    "deploy:treasury": "tsx src/deploy-treasury.ts",
+    "deploy:governance": "tsx src/deploy-governance.ts",
+    "query:vault": "tsx src/query-vault.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.33.0",
+  "dependencies": {
+    "@dedot/contracts": "^1.3.0",
+    "@polkadot/keyring": "^13.5.6",
+    "@polkadot/util-crypto": "^13.5.6",
+    "dedot": "^1.3.0",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}
