@@ -13,7 +13,7 @@ pnpm deploy:treasury --token <ss58_address>
 ## Deploying Governance
 
 ```bash
-pnpm deploy:governance --treasury <ss58_address> --vault <ss58_address> --token <ss58_address> --oracle <ss58_address> --maintainer <ss58_address>
+pnpm deploy:governance --treasury <ss58_address> --vault <ss58_address> --auction <ss58_address> --oracle <ss58_address> --maintainer <ss58_address>
 ```
 
 
