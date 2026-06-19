@@ -1,0 +1,3268 @@
+{
+  "source": {
+    "hash": "0xaba7a3cea6eba4e81333ff24aea348ea51efda52be4bb4f42403ef033aaf3e66",
+    "language": "ink! 5.1.1",
+    "compiler": "rustc 1.91.1",
+    "build_info": {
+      "build_mode": "Release",
+      "cargo_contract_version": "5.0.3",
+      "rust_toolchain": "stable-x86_64-unknown-linux-gnu",
+      "wasm_opt_settings": {
+        "keep_debug_symbols": false,
+        "optimization_passes": "Z"
+      }
+    }
+  },
+  "contract": {
+    "name": "tusdt-election",
+    "version": "0.1.0",
+    "authors": [
+      "tensorusd admin@tensorusd.com"
+    ]
+  },
+  "image": null,
+  "spec": {
+    "constructors": [
+      {
+        "args": [
+          {
+            "label": "governance_address",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          },
+          {
+            "label": "initial_incumbent",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          },
+          {
+            "label": "initial_netuid",
+            "type": {
+              "displayName": [
+                "u16"
+              ],
+              "type": 5
+            }
+          }
+        ],
+        "default": false,
+        "docs": [
+          "Initializes the election contract.",
+          "",
+          "`governance_address` is the governance contract this election drives (governance",
+          "instantiates this contract and authorizes it as its `election`, and the election reads",
+          "governance's snapshot at schedule). `initial_incumbent` is the seated maintainer at",
+          "deployment and runs the election machinery (emergency, cancel) until the next winner",
+          "activates. It is treated as having just been elected at genesis — counted as one served",
+          "term, with the first election one full [`TERM_LENGTH_MS`] later — so it cannot be",
+          "challenged immediately. `initial_netuid` is the governing subnet at deployment. The",
+          "candidate \"owner\" stake bar is the [`MIN_CANDIDATE_STAKE`] constant."
+        ],
+        "label": "new",
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink_primitives",
+            "ConstructorResult"
+          ],
+          "type": 35
+        },
+        "selector": "0x9bae9d5e"
+      }
+    ],
+    "docs": [],
+    "environment": {
+      "accountId": {
+        "displayName": [
+          "AccountId"
+        ],
+        "type": 0
+      },
+      "balance": {
+        "displayName": [
+          "Balance"
+        ],
+        "type": 3
+      },
+      "blockNumber": {
+        "displayName": [
+          "BlockNumber"
+        ],
+        "type": 4
+      },
+      "chainExtension": {
+        "displayName": [
+          "ChainExtension"
+        ],
+        "type": 59
+      },
+      "hash": {
+        "displayName": [
+          "Hash"
+        ],
+        "type": 58
+      },
+      "maxEventTopics": 4,
+      "staticBufferSize": 16384,
+      "timestamp": {
+        "displayName": [
+          "Timestamp"
+        ],
+        "type": 3
+      }
+    },
+    "events": [
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "cycle_id",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 3
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "label": "winner",
+            "type": {
+              "displayName": [
+                "Option"
+              ],
+              "type": 28
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "label": "netuid",
+            "type": {
+              "displayName": [
+                "u16"
+              ],
+              "type": 5
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "label": "approval_weight",
+            "type": {
+              "displayName": [
+                "u128"
+              ],
+              "type": 17
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "label": "total_voting_power",
+            "type": {
+              "displayName": [
+                "u128"
+              ],
+              "type": 17
+            }
+          }
+        ],
+        "docs": [],
+        "label": "ElectionFinalized",
+        "module_path": "tusdt_election::election",
+        "signature_topic": "0x2362953c9ca9f810903b5835cb61731fc290ad09c58055a2dad1467f8ef5f8ba"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "cycle_id",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 3
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "label": "emergency",
+            "type": {
+              "displayName": [
+                "bool"
+              ],
+              "type": 25
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "label": "scheduled_at",
+            "type": {
+              "displayName": [
+                "Timestamp"
+              ],
+              "type": 3
+            }
+          }
+        ],
+        "docs": [],
+        "label": "ElectionScheduled",
+        "module_path": "tusdt_election::election",
+        "signature_topic": "0xe147b1f29f4a35a9625e680bd58fca5c4f3cc2e63272859df07697f39a383ed6"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": false,
+            "label": "from_netuid",
+            "type": {
+              "displayName": [
+                "u16"
+              ],
+              "type": 5
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "label": "to_netuid",
+            "type": {
+              "displayName": [
+                "u16"
+              ],
+              "type": 5
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "label": "ends_at",
+            "type": {
+              "displayName": [
+                "Timestamp"
+              ],
+              "type": 3
+            }
+          }
+        ],
+        "docs": [],
+        "label": "TransitionStarted",
+        "module_path": "tusdt_election::election",
+        "signature_topic": "0xfd590abee3028af8fc1c81dc48c76b205cf7b5f9842746f6a981f052d8fc93d9"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "cycle_id",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 3
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "candidate",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "label": "netuid",
+            "type": {
+              "displayName": [
+                "u16"
+              ],
+              "type": 5
+            }
+          }
+        ],
+        "docs": [],
+        "label": "CandidateRegistered",
+        "module_path": "tusdt_election::election",
+        "signature_topic": "0xf534a8d5cc2c3645a836a8fa08bd3a604cdfc6d1725bc602b4691bfa46f156b9"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "cycle_id",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 3
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "new_maintainer",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "label": "active_netuid",
+            "type": {
+              "displayName": [
+                "u16"
+              ],
+              "type": 5
+            }
+          }
+        ],
+        "docs": [],
+        "label": "MaintainerActivated",
+        "module_path": "tusdt_election::election",
+        "signature_topic": "0x69636dee45db7e1620dfc1e0fc55dc79b2f7332414e8f50a976fd08a9df14515"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "triggered_by",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          }
+        ],
+        "docs": [],
+        "label": "EmergencyElectionTriggered",
+        "module_path": "tusdt_election::election",
+        "signature_topic": "0xfc362976000d79c7179b457c8397ae2e764801498c518c6f3caef3768492a948"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "cycle_id",
+            "type": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 3
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "candidate",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          },
+          {
+            "docs": [],
+            "indexed": true,
+            "label": "coldkey",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          },
+          {
+            "docs": [],
+            "indexed": false,
+            "label": "weight",
+            "type": {
+              "displayName": [
+                "u128"
+              ],
+              "type": 17
+            }
+          }
+        ],
+        "docs": [],
+        "label": "ApprovalCast",
+        "module_path": "tusdt_election::election",
+        "signature_topic": "0xfc7c759b60d199c651ffbcb9ecb3ce6cf88c846eeab1c68df3bc8ae9caf19b93"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": false,
+            "label": "netuid",
+            "type": {
+              "displayName": [
+                "u16"
+              ],
+              "type": 5
+            }
+          }
+        ],
+        "docs": [],
+        "label": "TransitionEnded",
+        "module_path": "tusdt_election::election",
+        "signature_topic": "0x58ff161107462f9a1afa737f46099d645e036fac315e9633acb61f4e4310b35d"
+      }
+    ],
+    "lang_error": {
+      "displayName": [
+        "ink",
+        "LangError"
+      ],
+      "type": 36
+    },
+    "messages": [
+      {
+        "args": [],
+        "default": false,
+        "docs": [],
+        "label": "governance",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 37
+        },
+        "selector": "0x9f90cf17"
+      },
+      {
+        "args": [],
+        "default": false,
+        "docs": [],
+        "label": "min_candidate_stake",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 38
+        },
+        "selector": "0x0ae9acd2"
+      },
+      {
+        "args": [],
+        "default": false,
+        "docs": [],
+        "label": "incumbent",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 37
+        },
+        "selector": "0x07caac25"
+      },
+      {
+        "args": [],
+        "default": false,
+        "docs": [],
+        "label": "active_netuid",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 39
+        },
+        "selector": "0x1573bcdb"
+      },
+      {
+        "args": [],
+        "default": false,
+        "docs": [],
+        "label": "phase",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 40
+        },
+        "selector": "0xd8eeb0e4"
+      },
+      {
+        "args": [],
+        "default": false,
+        "docs": [],
+        "label": "cycle_id",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 41
+        },
+        "selector": "0xad10e2b6"
+      },
+      {
+        "args": [],
+        "default": false,
+        "docs": [],
+        "label": "next_election_ts",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 41
+        },
+        "selector": "0x4a636bfa"
+      },
+      {
+        "args": [
+          {
+            "label": "who",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          }
+        ],
+        "default": false,
+        "docs": [],
+        "label": "terms_served",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 42
+        },
+        "selector": "0x9c9fd5d1"
+      },
+      {
+        "args": [
+          {
+            "label": "candidate",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          }
+        ],
+        "default": false,
+        "docs": [],
+        "label": "get_candidate",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 43
+        },
+        "selector": "0xd868f55a"
+      },
+      {
+        "args": [],
+        "default": false,
+        "docs": [],
+        "label": "candidate_list",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 45
+        },
+        "selector": "0x2d6188c6"
+      },
+      {
+        "args": [
+          {
+            "label": "candidate",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          }
+        ],
+        "default": false,
+        "docs": [],
+        "label": "approval_weight",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 38
+        },
+        "selector": "0x49423dae"
+      },
+      {
+        "args": [],
+        "default": false,
+        "docs": [],
+        "label": "total_participating_power",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 38
+        },
+        "selector": "0xa0e414b3"
+      },
+      {
+        "args": [],
+        "default": false,
+        "docs": [
+          " Raw (snapshot-frozen) alpha balance that has voted; measured against [`quorum`]."
+        ],
+        "label": "total_voted_balance",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 38
+        },
+        "selector": "0xadf6eeb4"
+      },
+      {
+        "args": [],
+        "default": false,
+        "docs": [
+          " The turnout quorum threshold for the current cycle: `circulating_supply * QUORUM_BPS`.",
+          " Returns 0 when no electorate snapshot is recorded."
+        ],
+        "label": "quorum",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 38
+        },
+        "selector": "0xcc9acab1"
+      },
+      {
+        "args": [],
+        "default": false,
+        "docs": [
+          " The running leader and its accumulated approval weight (the winner-to-be once the cycle",
+          " closes, subject to the quorum and the >50% bar)."
+        ],
+        "label": "leading_candidate",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 46
+        },
+        "selector": "0x8f7b83ae"
+      },
+      {
+        "args": [],
+        "default": false,
+        "docs": [],
+        "label": "maintainer_elect",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 49
+        },
+        "selector": "0x82b83718"
+      },
+      {
+        "args": [],
+        "default": false,
+        "docs": [],
+        "label": "transition",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 50
+        },
+        "selector": "0xcec8e9fa"
+      },
+      {
+        "args": [],
+        "default": false,
+        "docs": [],
+        "label": "is_in_transition",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 51
+        },
+        "selector": "0x0c874b2a"
+      },
+      {
+        "args": [],
+        "default": false,
+        "docs": [],
+        "label": "voting_window",
+        "mutates": false,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 52
+        },
+        "selector": "0xd89921b0"
+      },
+      {
+        "args": [],
+        "default": false,
+        "docs": [
+          " Opens a new election cycle (Idle → Registration). Permissionless. Allowed once the",
+          " cadence anchor is reached (`now >= next_election_ts`), or immediately when an emergency",
+          " has been flagged by the incumbent. Fetches the electorate snapshot from governance's",
+          " latest committed snapshot (so it reflects the current — or, mid-migration, still-deferred",
+          " previous — governing subnet) and resets all per-cycle state under a fresh `cycle_id`."
+        ],
+        "label": "schedule_election",
+        "mutates": true,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 54
+        },
+        "selector": "0x89bdab77"
+      },
+      {
+        "args": [
+          {
+            "label": "netuid",
+            "type": {
+              "displayName": [
+                "u16"
+              ],
+              "type": 5
+            }
+          },
+          {
+            "label": "hotkey",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          }
+        ],
+        "default": false,
+        "docs": [
+          " Registers the caller (coldkey) as a candidate governing `netuid`. Permissionless, but the",
+          " coldkey must hold at least `min_candidate_stake` alpha in `netuid` (proven on-chain via",
+          " the stake chain extension for `(hotkey, caller, netuid)`) so only a plausible subnet",
+          " owner can stand. Rejected if the caller has already served [`MAX_TERMS`]. No approval",
+          " step — a registered candidate is immediately votable."
+        ],
+        "label": "register_candidate",
+        "mutates": true,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 54
+        },
+        "selector": "0x653d424f"
+      },
+      {
+        "args": [
+          {
+            "label": "candidate",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          },
+          {
+            "label": "hotkey",
+            "type": {
+              "displayName": [
+                "AccountId"
+              ],
+              "type": 0
+            }
+          },
+          {
+            "label": "balance",
+            "type": {
+              "displayName": [
+                "u128"
+              ],
+              "type": 17
+            }
+          },
+          {
+            "label": "multiplier_bps",
+            "type": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 4
+            }
+          },
+          {
+            "label": "proof",
+            "type": {
+              "displayName": [
+                "Vec"
+              ],
+              "type": 57
+            }
+          }
+        ],
+        "default": false,
+        "docs": [
+          " Casts this leaf's single vote for a registered `candidate`. The caller is the coldkey;",
+          " `hotkey`, `balance`, and `multiplier_bps` are the caller's leaf in the cycle's snapshot,",
+          " proven by `proof`. Each `(coldkey, hotkey)` leaf may approve exactly one candidate; a",
+          " second `cast_approval` from the same leaf — for any candidate — is rejected.",
+          "",
+          " The first vote of the cycle, cast on/after the [`VOTE_OPEN_DAY`] (the 5th), moves the cycle from",
+          " `Registration` to `Voting` and starts the [`VOTING_PERIOD_MS`] (5-day) window from that vote."
+        ],
+        "label": "cast_approval",
+        "mutates": true,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 54
+        },
+        "selector": "0x51859f32"
+      },
+      {
+        "args": [],
+        "default": false,
+        "docs": [
+          " Closes voting and decides the outcome (Voting → Elected or Idle). Permissionless; only",
+          " callable after the voting window. The winner is the running leader, provided turnout",
+          " reached the [`QUORUM_BPS`] quorum and its approval weight is strictly greater than 50% of",
+          " the participating voting power. If no candidate clears both bars, the incumbent stays and",
+          " the cadence advances."
+        ],
+        "label": "finalize",
+        "mutates": true,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 54
+        },
+        "selector": "0x40656e2b"
+      },
+      {
+        "args": [],
+        "default": false,
+        "docs": [
+          " Installs the elected maintainer (Elected → Idle). Permissionless; callable on/after the",
+          " [`ACTIVATION_DAY`] (the 15th) — the winner is already decided, so anyone may push the",
+          " installation through and the cycle can never stall on an absent winner. Installs the",
+          " winner as governance's maintainer via the election-gated `elect_maintainer`; the new",
+          " maintainer seats their own council on governance afterward. If the winner governs a",
+          " different subnet, opens a 6-month transition during which the previous subnet stays",
+          " authoritative and the netuid switch is deferred to [`end_transition`]."
+        ],
+        "label": "activate",
+        "mutates": true,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 54
+        },
+        "selector": "0x5ccbfb51"
+      },
+      {
+        "args": [],
+        "default": false,
+        "docs": [
+          " Completes a migration once its 6 months elapse: switches `active_netuid` to the new",
+          " subnet and pushes the netuid change into governance. Permissionless."
+        ],
+        "label": "end_transition",
+        "mutates": true,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 54
+        },
+        "selector": "0x8b46fbda"
+      },
+      {
+        "args": [],
+        "default": false,
+        "docs": [
+          " Flags an emergency election (e.g. the governing subnet was deregistered);",
+          " incumbent-only. The next `schedule_election` may then run immediately, bypassing the",
+          " cadence anchor."
+        ],
+        "label": "trigger_emergency_election",
+        "mutates": true,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 54
+        },
+        "selector": "0xe41d6c8f"
+      },
+      {
+        "args": [],
+        "default": false,
+        "docs": [
+          " Cancels a stalled registration and returns to Idle; incumbent-only. Allowed only in",
+          " `Registration` — the one phase that can genuinely stall (no first vote ever opens voting,",
+          " so there is no window to finalize). A `Voting` cycle is always finalizable after its",
+          " window, and an `Elected` cycle is resolved by the permissionless `activate`, so neither",
+          " needs (nor should allow) cancellation — in particular this prevents an outgoing incumbent",
+          " from vetoing a decided winner."
+        ],
+        "label": "cancel_cycle",
+        "mutates": true,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 54
+        },
+        "selector": "0xe1bc02c9"
+      }
+    ]
+  },
+  "storage": {
+    "root": {
+      "layout": {
+        "struct": {
+          "fields": [
+            {
+              "layout": {
+                "leaf": {
+                  "key": "0x00000000",
+                  "ty": 0
+                }
+              },
+              "name": "governance"
+            },
+            {
+              "layout": {
+                "leaf": {
+                  "key": "0x00000000",
+                  "ty": 3
+                }
+              },
+              "name": "genesis_election_ts"
+            },
+            {
+              "layout": {
+                "leaf": {
+                  "key": "0x00000000",
+                  "ty": 4
+                }
+              },
+              "name": "term_index"
+            },
+            {
+              "layout": {
+                "leaf": {
+                  "key": "0x00000000",
+                  "ty": 3
+                }
+              },
+              "name": "next_election_ts"
+            },
+            {
+              "layout": {
+                "leaf": {
+                  "key": "0x00000000",
+                  "ty": 0
+                }
+              },
+              "name": "incumbent"
+            },
+            {
+              "layout": {
+                "leaf": {
+                  "key": "0x00000000",
+                  "ty": 5
+                }
+              },
+              "name": "active_netuid"
+            },
+            {
+              "layout": {
+                "root": {
+                  "layout": {
+                    "leaf": {
+                      "key": "0x3ed6f82e",
+                      "ty": 4
+                    }
+                  },
+                  "root_key": "0x3ed6f82e",
+                  "ty": 6
+                }
+              },
+              "name": "terms_served"
+            },
+            {
+              "layout": {
+                "enum": {
+                  "dispatchKey": "0x00000000",
+                  "name": "Phase",
+                  "variants": {
+                    "0": {
+                      "fields": [],
+                      "name": "Idle"
+                    },
+                    "1": {
+                      "fields": [],
+                      "name": "Registration"
+                    },
+                    "2": {
+                      "fields": [],
+                      "name": "Voting"
+                    },
+                    "3": {
+                      "fields": [],
+                      "name": "Elected"
+                    }
+                  }
+                }
+              },
+              "name": "phase"
+            },
+            {
+              "layout": {
+                "leaf": {
+                  "key": "0x00000000",
+                  "ty": 3
+                }
+              },
+              "name": "cycle_id"
+            },
+            {
+              "layout": {
+                "root": {
+                  "layout": {
+                    "struct": {
+                      "fields": [
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0x6d88fa2a",
+                              "ty": 5
+                            }
+                          },
+                          "name": "netuid"
+                        },
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0x6d88fa2a",
+                              "ty": 3
+                            }
+                          },
+                          "name": "registered_at"
+                        }
+                      ],
+                      "name": "Candidacy"
+                    }
+                  },
+                  "root_key": "0x6d88fa2a",
+                  "ty": 11
+                }
+              },
+              "name": "candidates"
+            },
+            {
+              "layout": {
+                "leaf": {
+                  "key": "0x00000000",
+                  "ty": 16
+                }
+              },
+              "name": "candidate_list"
+            },
+            {
+              "layout": {
+                "root": {
+                  "layout": {
+                    "leaf": {
+                      "key": "0x9c83ac1f",
+                      "ty": 17
+                    }
+                  },
+                  "root_key": "0x9c83ac1f",
+                  "ty": 18
+                }
+              },
+              "name": "approvals"
+            },
+            {
+              "layout": {
+                "root": {
+                  "layout": {
+                    "leaf": {
+                      "key": "0xce05fbe8",
+                      "ty": 10
+                    }
+                  },
+                  "root_key": "0xce05fbe8",
+                  "ty": 21
+                }
+              },
+              "name": "participated"
+            },
+            {
+              "layout": {
+                "leaf": {
+                  "key": "0x00000000",
+                  "ty": 17
+                }
+              },
+              "name": "total_voting_power"
+            },
+            {
+              "layout": {
+                "leaf": {
+                  "key": "0x00000000",
+                  "ty": 17
+                }
+              },
+              "name": "total_voted_balance"
+            },
+            {
+              "layout": {
+                "enum": {
+                  "dispatchKey": "0x00000000",
+                  "name": "Option",
+                  "variants": {
+                    "0": {
+                      "fields": [],
+                      "name": "None"
+                    },
+                    "1": {
+                      "fields": [
+                        {
+                          "layout": {
+                            "leaf": {
+                              "key": "0x00000000",
+                              "ty": 0
+                            }
+                          },
+                          "name": "0"
+                        }
+                      ],
+                      "name": "Some"
+                    }
+                  }
+                }
+              },
+              "name": "leading_candidate"
+            },
+            {
+              "layout": {
+                "leaf": {
+                  "key": "0x00000000",
+                  "ty": 17
+                }
+              },
+              "name": "leading_weight"
+            },
+            {
+              "layout": {
+                "enum": {
+                  "dispatchKey": "0x00000000",
+                  "name": "Option",
+                  "variants": {
+                    "0": {
+                      "fields": [],
+                      "name": "None"
+                    },
+                    "1": {
+                      "fields": [
+                        {
+                          "layout": {
+                            "struct": {
+                              "fields": [
+                                {
+                                  "layout": {
+                                    "array": {
+                                      "layout": {
+                                        "leaf": {
+                                          "key": "0x00000000",
+                                          "ty": 2
+                                        }
+                                      },
+                                      "len": 32,
+                                      "offset": "0x00000000"
+                                    }
+                                  },
+                                  "name": "root"
+                                },
+                                {
+                                  "layout": {
+                                    "leaf": {
+                                      "key": "0x00000000",
+                                      "ty": 17
+                                    }
+                                  },
+                                  "name": "circulating_supply"
+                                },
+                                {
+                                  "layout": {
+                                    "leaf": {
+                                      "key": "0x00000000",
+                                      "ty": 5
+                                    }
+                                  },
+                                  "name": "netuid"
+                                },
+                                {
+                                  "layout": {
+                                    "leaf": {
+                                      "key": "0x00000000",
+                                      "ty": 4
+                                    }
+                                  },
+                                  "name": "snapshot_block"
+                                }
+                              ],
+                              "name": "ElectionSnapshot"
+                            }
+                          },
+                          "name": "0"
+                        }
+                      ],
+                      "name": "Some"
+                    }
+                  }
+                }
+              },
+              "name": "election_snapshot"
+            },
+            {
+              "layout": {
+                "leaf": {
+                  "key": "0x00000000",
+                  "ty": 3
+                }
+              },
+              "name": "voting_opens_at"
+            },
+            {
+              "layout": {
+                "leaf": {
+                  "key": "0x00000000",
+                  "ty": 3
+                }
+              },
+              "name": "voting_ends_at"
+            },
+            {
+              "layout": {
+                "enum": {
+                  "dispatchKey": "0x00000000",
+                  "name": "Option",
+                  "variants": {
+                    "0": {
+                      "fields": [],
+                      "name": "None"
+                    },
+                    "1": {
+                      "fields": [
+                        {
+                          "layout": {
+                            "struct": {
+                              "fields": [
+                                {
+                                  "layout": {
+                                    "leaf": {
+                                      "key": "0x00000000",
+                                      "ty": 0
+                                    }
+                                  },
+                                  "name": "who"
+                                },
+                                {
+                                  "layout": {
+                                    "leaf": {
+                                      "key": "0x00000000",
+                                      "ty": 5
+                                    }
+                                  },
+                                  "name": "netuid"
+                                },
+                                {
+                                  "layout": {
+                                    "leaf": {
+                                      "key": "0x00000000",
+                                      "ty": 17
+                                    }
+                                  },
+                                  "name": "approval_weight"
+                                },
+                                {
+                                  "layout": {
+                                    "leaf": {
+                                      "key": "0x00000000",
+                                      "ty": 3
+                                    }
+                                  },
+                                  "name": "decided_at"
+                                }
+                              ],
+                              "name": "MaintainerElect"
+                            }
+                          },
+                          "name": "0"
+                        }
+                      ],
+                      "name": "Some"
+                    }
+                  }
+                }
+              },
+              "name": "maintainer_elect"
+            },
+            {
+              "layout": {
+                "enum": {
+                  "dispatchKey": "0x00000000",
+                  "name": "Option",
+                  "variants": {
+                    "0": {
+                      "fields": [],
+                      "name": "None"
+                    },
+                    "1": {
+                      "fields": [
+                        {
+                          "layout": {
+                            "struct": {
+                              "fields": [
+                                {
+                                  "layout": {
+                                    "leaf": {
+                                      "key": "0x00000000",
+                                      "ty": 5
+                                    }
+                                  },
+                                  "name": "from_netuid"
+                                },
+                                {
+                                  "layout": {
+                                    "leaf": {
+                                      "key": "0x00000000",
+                                      "ty": 5
+                                    }
+                                  },
+                                  "name": "to_netuid"
+                                },
+                                {
+                                  "layout": {
+                                    "leaf": {
+                                      "key": "0x00000000",
+                                      "ty": 3
+                                    }
+                                  },
+                                  "name": "ends_at"
+                                }
+                              ],
+                              "name": "Transition"
+                            }
+                          },
+                          "name": "0"
+                        }
+                      ],
+                      "name": "Some"
+                    }
+                  }
+                }
+              },
+              "name": "transition"
+            },
+            {
+              "layout": {
+                "leaf": {
+                  "key": "0x00000000",
+                  "ty": 25
+                }
+              },
+              "name": "emergency_pending"
+            }
+          ],
+          "name": "TusdtElection"
+        }
+      },
+      "root_key": "0x00000000",
+      "ty": 26
+    }
+  },
+  "types": [
+    {
+      "id": 0,
+      "type": {
+        "def": {
+          "composite": {
+            "fields": [
+              {
+                "type": 1,
+                "typeName": "[u8; 32]"
+              }
+            ]
+          }
+        },
+        "path": [
+          "ink_primitives",
+          "types",
+          "AccountId"
+        ]
+      }
+    },
+    {
+      "id": 1,
+      "type": {
+        "def": {
+          "array": {
+            "len": 32,
+            "type": 2
+          }
+        }
+      }
+    },
+    {
+      "id": 2,
+      "type": {
+        "def": {
+          "primitive": "u8"
+        }
+      }
+    },
+    {
+      "id": 3,
+      "type": {
+        "def": {
+          "primitive": "u64"
+        }
+      }
+    },
+    {
+      "id": 4,
+      "type": {
+        "def": {
+          "primitive": "u32"
+        }
+      }
+    },
+    {
+      "id": 5,
+      "type": {
+        "def": {
+          "primitive": "u16"
+        }
+      }
+    },
+    {
+      "id": 6,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "K",
+            "type": 0
+          },
+          {
+            "name": "V",
+            "type": 4
+          },
+          {
+            "name": "KeyType",
+            "type": 7
+          }
+        ],
+        "path": [
+          "ink_storage",
+          "lazy",
+          "mapping",
+          "Mapping"
+        ]
+      }
+    },
+    {
+      "id": 7,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "L",
+            "type": 8
+          },
+          {
+            "name": "R",
+            "type": 9
+          }
+        ],
+        "path": [
+          "ink_storage_traits",
+          "impls",
+          "ResolverKey"
+        ]
+      }
+    },
+    {
+      "id": 8,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "path": [
+          "ink_storage_traits",
+          "impls",
+          "AutoKey"
+        ]
+      }
+    },
+    {
+      "id": 9,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "ParentKey",
+            "type": 10
+          }
+        ],
+        "path": [
+          "ink_storage_traits",
+          "impls",
+          "ManualKey"
+        ]
+      }
+    },
+    {
+      "id": 10,
+      "type": {
+        "def": {
+          "tuple": []
+        }
+      }
+    },
+    {
+      "id": 11,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "K",
+            "type": 12
+          },
+          {
+            "name": "V",
+            "type": 13
+          },
+          {
+            "name": "KeyType",
+            "type": 14
+          }
+        ],
+        "path": [
+          "ink_storage",
+          "lazy",
+          "mapping",
+          "Mapping"
+        ]
+      }
+    },
+    {
+      "id": 12,
+      "type": {
+        "def": {
+          "tuple": [
+            3,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "id": 13,
+      "type": {
+        "def": {
+          "composite": {
+            "fields": [
+              {
+                "name": "netuid",
+                "type": 5,
+                "typeName": "u16"
+              },
+              {
+                "name": "registered_at",
+                "type": 3,
+                "typeName": "Timestamp"
+              }
+            ]
+          }
+        },
+        "path": [
+          "tusdt_election",
+          "election",
+          "Candidacy"
+        ]
+      }
+    },
+    {
+      "id": 14,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "L",
+            "type": 8
+          },
+          {
+            "name": "R",
+            "type": 15
+          }
+        ],
+        "path": [
+          "ink_storage_traits",
+          "impls",
+          "ResolverKey"
+        ]
+      }
+    },
+    {
+      "id": 15,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "ParentKey",
+            "type": 10
+          }
+        ],
+        "path": [
+          "ink_storage_traits",
+          "impls",
+          "ManualKey"
+        ]
+      }
+    },
+    {
+      "id": 16,
+      "type": {
+        "def": {
+          "sequence": {
+            "type": 0
+          }
+        }
+      }
+    },
+    {
+      "id": 17,
+      "type": {
+        "def": {
+          "primitive": "u128"
+        }
+      }
+    },
+    {
+      "id": 18,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "K",
+            "type": 12
+          },
+          {
+            "name": "V",
+            "type": 17
+          },
+          {
+            "name": "KeyType",
+            "type": 19
+          }
+        ],
+        "path": [
+          "ink_storage",
+          "lazy",
+          "mapping",
+          "Mapping"
+        ]
+      }
+    },
+    {
+      "id": 19,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "L",
+            "type": 8
+          },
+          {
+            "name": "R",
+            "type": 20
+          }
+        ],
+        "path": [
+          "ink_storage_traits",
+          "impls",
+          "ResolverKey"
+        ]
+      }
+    },
+    {
+      "id": 20,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "ParentKey",
+            "type": 10
+          }
+        ],
+        "path": [
+          "ink_storage_traits",
+          "impls",
+          "ManualKey"
+        ]
+      }
+    },
+    {
+      "id": 21,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "K",
+            "type": 22
+          },
+          {
+            "name": "V",
+            "type": 10
+          },
+          {
+            "name": "KeyType",
+            "type": 23
+          }
+        ],
+        "path": [
+          "ink_storage",
+          "lazy",
+          "mapping",
+          "Mapping"
+        ]
+      }
+    },
+    {
+      "id": 22,
+      "type": {
+        "def": {
+          "tuple": [
+            3,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "id": 23,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "L",
+            "type": 8
+          },
+          {
+            "name": "R",
+            "type": 24
+          }
+        ],
+        "path": [
+          "ink_storage_traits",
+          "impls",
+          "ResolverKey"
+        ]
+      }
+    },
+    {
+      "id": 24,
+      "type": {
+        "def": {
+          "composite": {}
+        },
+        "params": [
+          {
+            "name": "ParentKey",
+            "type": 10
+          }
+        ],
+        "path": [
+          "ink_storage_traits",
+          "impls",
+          "ManualKey"
+        ]
+      }
+    },
+    {
+      "id": 25,
+      "type": {
+        "def": {
+          "primitive": "bool"
+        }
+      }
+    },
+    {
+      "id": 26,
+      "type": {
+        "def": {
+          "composite": {
+            "fields": [
+              {
+                "name": "governance",
+                "type": 0,
+                "typeName": "<AccountId as::ink::storage::traits::AutoStorableHint<::ink::\nstorage::traits::ManualKey<3325875029u32, ()>,>>::Type"
+              },
+              {
+                "name": "genesis_election_ts",
+                "type": 3,
+                "typeName": "<Timestamp as::ink::storage::traits::AutoStorableHint<::ink::\nstorage::traits::ManualKey<805843770u32, ()>,>>::Type"
+              },
+              {
+                "name": "term_index",
+                "type": 4,
+                "typeName": "<u32 as::ink::storage::traits::AutoStorableHint<::ink::storage\n::traits::ManualKey<3203606317u32, ()>,>>::Type"
+              },
+              {
+                "name": "next_election_ts",
+                "type": 3,
+                "typeName": "<Timestamp as::ink::storage::traits::AutoStorableHint<::ink::\nstorage::traits::ManualKey<3931559867u32, ()>,>>::Type"
+              },
+              {
+                "name": "incumbent",
+                "type": 0,
+                "typeName": "<AccountId as::ink::storage::traits::AutoStorableHint<::ink::\nstorage::traits::ManualKey<3875421059u32, ()>,>>::Type"
+              },
+              {
+                "name": "active_netuid",
+                "type": 5,
+                "typeName": "<u16 as::ink::storage::traits::AutoStorableHint<::ink::storage\n::traits::ManualKey<3281092575u32, ()>,>>::Type"
+              },
+              {
+                "name": "terms_served",
+                "type": 6,
+                "typeName": "<Mapping<AccountId, u32> as::ink::storage::traits::\nAutoStorableHint<::ink::storage::traits::ManualKey<788059710u32, ()\n>,>>::Type"
+              },
+              {
+                "name": "phase",
+                "type": 27,
+                "typeName": "<Phase as::ink::storage::traits::AutoStorableHint<::ink::storage\n::traits::ManualKey<2753082184u32, ()>,>>::Type"
+              },
+              {
+                "name": "cycle_id",
+                "type": 3,
+                "typeName": "<u64 as::ink::storage::traits::AutoStorableHint<::ink::storage\n::traits::ManualKey<1479776176u32, ()>,>>::Type"
+              },
+              {
+                "name": "candidates",
+                "type": 11,
+                "typeName": "<Mapping<(u64, AccountId), Candidacy> as::ink::storage::traits::\nAutoStorableHint<::ink::storage::traits::ManualKey<721061997u32, ()\n>,>>::Type"
+              },
+              {
+                "name": "candidate_list",
+                "type": 16,
+                "typeName": "<Vec<AccountId> as::ink::storage::traits::AutoStorableHint<::\nink::storage::traits::ManualKey<1264075023u32, ()>,>>::Type"
+              },
+              {
+                "name": "approvals",
+                "type": 18,
+                "typeName": "<Mapping<(u64, AccountId), u128> as::ink::storage::traits::\nAutoStorableHint<::ink::storage::traits::ManualKey<531399580u32, ()\n>,>>::Type"
+              },
+              {
+                "name": "participated",
+                "type": 21,
+                "typeName": "<Mapping<(u64, AccountId, AccountId), ()> as::ink::storage::traits\n::AutoStorableHint<::ink::storage::traits::ManualKey<\n3908765134u32, ()>,>>::Type"
+              },
+              {
+                "name": "total_voting_power",
+                "type": 17,
+                "typeName": "<u128 as::ink::storage::traits::AutoStorableHint<::ink::storage\n::traits::ManualKey<1374258242u32, ()>,>>::Type"
+              },
+              {
+                "name": "total_voted_balance",
+                "type": 17,
+                "typeName": "<u128 as::ink::storage::traits::AutoStorableHint<::ink::storage\n::traits::ManualKey<2284160758u32, ()>,>>::Type"
+              },
+              {
+                "name": "leading_candidate",
+                "type": 28,
+                "typeName": "<Option<AccountId> as::ink::storage::traits::AutoStorableHint<::\nink::storage::traits::ManualKey<1070538773u32, ()>,>>::Type"
+              },
+              {
+                "name": "leading_weight",
+                "type": 17,
+                "typeName": "<u128 as::ink::storage::traits::AutoStorableHint<::ink::storage\n::traits::ManualKey<200633663u32, ()>,>>::Type"
+              },
+              {
+                "name": "election_snapshot",
+                "type": 29,
+                "typeName": "<Option<ElectionSnapshot> as::ink::storage::traits::\nAutoStorableHint<::ink::storage::traits::ManualKey<3812616786u32,\n()>,>>::Type"
+              },
+              {
+                "name": "voting_opens_at",
+                "type": 3,
+                "typeName": "<Timestamp as::ink::storage::traits::AutoStorableHint<::ink::\nstorage::traits::ManualKey<2541690925u32, ()>,>>::Type"
+              },
+              {
+                "name": "voting_ends_at",
+                "type": 3,
+                "typeName": "<Timestamp as::ink::storage::traits::AutoStorableHint<::ink::\nstorage::traits::ManualKey<456670316u32, ()>,>>::Type"
+              },
+              {
+                "name": "maintainer_elect",
+                "type": 31,
+                "typeName": "<Option<MaintainerElect> as::ink::storage::traits::\nAutoStorableHint<::ink::storage::traits::ManualKey<2334835264u32,\n()>,>>::Type"
+              },
+              {
+                "name": "transition",
+                "type": 33,
+                "typeName": "<Option<Transition> as::ink::storage::traits::AutoStorableHint<\n::ink::storage::traits::ManualKey<849268211u32, ()>,>>::Type"
+              },
+              {
+                "name": "emergency_pending",
+                "type": 25,
+                "typeName": "<bool as::ink::storage::traits::AutoStorableHint<::ink::storage\n::traits::ManualKey<121049877u32, ()>,>>::Type"
+              }
+            ]
+          }
+        },
+        "path": [
+          "tusdt_election",
+          "election",
+          "TusdtElection"
+        ]
+      }
+    },
+    {
+      "id": 27,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "index": 0,
+                "name": "Idle"
+              },
+              {
+                "index": 1,
+                "name": "Registration"
+              },
+              {
+                "index": 2,
+                "name": "Voting"
+              },
+              {
+                "index": 3,
+                "name": "Elected"
+              }
+            ]
+          }
+        },
+        "path": [
+          "tusdt_election",
+          "election",
+          "Phase"
+        ]
+      }
+    },
+    {
+      "id": 28,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "index": 0,
+                "name": "None"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 0
+                  }
+                ],
+                "index": 1,
+                "name": "Some"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 0
+          }
+        ],
+        "path": [
+          "Option"
+        ]
+      }
+    },
+    {
+      "id": 29,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "index": 0,
+                "name": "None"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 30
+                  }
+                ],
+                "index": 1,
+                "name": "Some"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 30
+          }
+        ],
+        "path": [
+          "Option"
+        ]
+      }
+    },
+    {
+      "id": 30,
+      "type": {
+        "def": {
+          "composite": {
+            "fields": [
+              {
+                "name": "root",
+                "type": 1,
+                "typeName": "MerkleHash"
+              },
+              {
+                "name": "circulating_supply",
+                "type": 17,
+                "typeName": "u128"
+              },
+              {
+                "name": "netuid",
+                "type": 5,
+                "typeName": "u16"
+              },
+              {
+                "name": "snapshot_block",
+                "type": 4,
+                "typeName": "u32"
+              }
+            ]
+          }
+        },
+        "path": [
+          "tusdt_election",
+          "election",
+          "ElectionSnapshot"
+        ]
+      }
+    },
+    {
+      "id": 31,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "index": 0,
+                "name": "None"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 32
+                  }
+                ],
+                "index": 1,
+                "name": "Some"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 32
+          }
+        ],
+        "path": [
+          "Option"
+        ]
+      }
+    },
+    {
+      "id": 32,
+      "type": {
+        "def": {
+          "composite": {
+            "fields": [
+              {
+                "name": "who",
+                "type": 0,
+                "typeName": "AccountId"
+              },
+              {
+                "name": "netuid",
+                "type": 5,
+                "typeName": "u16"
+              },
+              {
+                "name": "approval_weight",
+                "type": 17,
+                "typeName": "u128"
+              },
+              {
+                "name": "decided_at",
+                "type": 3,
+                "typeName": "Timestamp"
+              }
+            ]
+          }
+        },
+        "path": [
+          "tusdt_election",
+          "election",
+          "MaintainerElect"
+        ]
+      }
+    },
+    {
+      "id": 33,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "index": 0,
+                "name": "None"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 34
+                  }
+                ],
+                "index": 1,
+                "name": "Some"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 34
+          }
+        ],
+        "path": [
+          "Option"
+        ]
+      }
+    },
+    {
+      "id": 34,
+      "type": {
+        "def": {
+          "composite": {
+            "fields": [
+              {
+                "name": "from_netuid",
+                "type": 5,
+                "typeName": "u16"
+              },
+              {
+                "name": "to_netuid",
+                "type": 5,
+                "typeName": "u16"
+              },
+              {
+                "name": "ends_at",
+                "type": 3,
+                "typeName": "Timestamp"
+              }
+            ]
+          }
+        },
+        "path": [
+          "tusdt_election",
+          "election",
+          "Transition"
+        ]
+      }
+    },
+    {
+      "id": 35,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 10
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 36
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 10
+          },
+          {
+            "name": "E",
+            "type": 36
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 36,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "index": 1,
+                "name": "CouldNotReadInput"
+              }
+            ]
+          }
+        },
+        "path": [
+          "ink_primitives",
+          "LangError"
+        ]
+      }
+    },
+    {
+      "id": 37,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 0
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 36
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 0
+          },
+          {
+            "name": "E",
+            "type": 36
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 38,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 17
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 36
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 17
+          },
+          {
+            "name": "E",
+            "type": 36
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 39,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 5
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 36
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 5
+          },
+          {
+            "name": "E",
+            "type": 36
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 40,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 27
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 36
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 27
+          },
+          {
+            "name": "E",
+            "type": 36
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 41,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 3
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 36
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 3
+          },
+          {
+            "name": "E",
+            "type": 36
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 42,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 4
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 36
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 4
+          },
+          {
+            "name": "E",
+            "type": 36
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 43,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 44
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 36
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 44
+          },
+          {
+            "name": "E",
+            "type": 36
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 44,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "index": 0,
+                "name": "None"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 13
+                  }
+                ],
+                "index": 1,
+                "name": "Some"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 13
+          }
+        ],
+        "path": [
+          "Option"
+        ]
+      }
+    },
+    {
+      "id": 45,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 16
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 36
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 16
+          },
+          {
+            "name": "E",
+            "type": 36
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 46,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 47
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 36
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 47
+          },
+          {
+            "name": "E",
+            "type": 36
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 47,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "index": 0,
+                "name": "None"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 48
+                  }
+                ],
+                "index": 1,
+                "name": "Some"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 48
+          }
+        ],
+        "path": [
+          "Option"
+        ]
+      }
+    },
+    {
+      "id": 48,
+      "type": {
+        "def": {
+          "tuple": [
+            0,
+            17
+          ]
+        }
+      }
+    },
+    {
+      "id": 49,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 31
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 36
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 31
+          },
+          {
+            "name": "E",
+            "type": 36
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 50,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 33
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 36
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 33
+          },
+          {
+            "name": "E",
+            "type": 36
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 51,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 25
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 36
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 25
+          },
+          {
+            "name": "E",
+            "type": 36
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 52,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 53
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 36
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 53
+          },
+          {
+            "name": "E",
+            "type": 36
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 53,
+      "type": {
+        "def": {
+          "tuple": [
+            3,
+            3
+          ]
+        }
+      }
+    },
+    {
+      "id": 54,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 55
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 36
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 55
+          },
+          {
+            "name": "E",
+            "type": 36
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 55,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "fields": [
+                  {
+                    "type": 10
+                  }
+                ],
+                "index": 0,
+                "name": "Ok"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 56
+                  }
+                ],
+                "index": 1,
+                "name": "Err"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 10
+          },
+          {
+            "name": "E",
+            "type": 56
+          }
+        ],
+        "path": [
+          "Result"
+        ]
+      }
+    },
+    {
+      "id": 56,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "index": 0,
+                "name": "NotIncumbent"
+              },
+              {
+                "index": 1,
+                "name": "WrongPhase"
+              },
+              {
+                "index": 2,
+                "name": "NotElectionTime"
+              },
+              {
+                "index": 3,
+                "name": "VotingClosed"
+              },
+              {
+                "index": 4,
+                "name": "VotingStillOpen"
+              },
+              {
+                "index": 5,
+                "name": "BeforeActivationDay"
+              },
+              {
+                "index": 6,
+                "name": "CandidateNotFound"
+              },
+              {
+                "index": 7,
+                "name": "AlreadyRegistered"
+              },
+              {
+                "index": 8,
+                "name": "TermLimitReached"
+              },
+              {
+                "index": 9,
+                "name": "InvalidNetuid"
+              },
+              {
+                "index": 10,
+                "name": "InsufficientStake"
+              },
+              {
+                "index": 11,
+                "name": "StakeQueryFailed"
+              },
+              {
+                "index": 12,
+                "name": "NoSnapshot"
+              },
+              {
+                "index": 13,
+                "name": "InvalidProof"
+              },
+              {
+                "index": 14,
+                "name": "NoStake"
+              },
+              {
+                "index": 15,
+                "name": "AlreadyApproved"
+              },
+              {
+                "index": 16,
+                "name": "NoWinner"
+              },
+              {
+                "index": 17,
+                "name": "NoTransition"
+              },
+              {
+                "index": 18,
+                "name": "TransitionActive"
+              },
+              {
+                "index": 19,
+                "name": "NoEmergencyPending"
+              },
+              {
+                "index": 20,
+                "name": "GovernanceCallFailed"
+              },
+              {
+                "index": 21,
+                "name": "ArithmeticError"
+              }
+            ]
+          }
+        },
+        "path": [
+          "tusdt_election",
+          "election",
+          "Error"
+        ]
+      }
+    },
+    {
+      "id": 57,
+      "type": {
+        "def": {
+          "sequence": {
+            "type": 1
+          }
+        }
+      }
+    },
+    {
+      "id": 58,
+      "type": {
+        "def": {
+          "composite": {
+            "fields": [
+              {
+                "type": 1,
+                "typeName": "[u8; 32]"
+              }
+            ]
+          }
+        },
+        "path": [
+          "ink_primitives",
+          "types",
+          "Hash"
+        ]
+      }
+    },
+    {
+      "id": 59,
+      "type": {
+        "def": {
+          "variant": {}
+        },
+        "path": [
+          "tusdt_env",
+          "RuntimeReadWrite"
+        ]
+      }
+    }
+  ],
+  "version": 5
+}

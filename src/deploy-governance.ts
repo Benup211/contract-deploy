@@ -11,6 +11,7 @@ import {
   loadSigner,
   logStatus,
   requireValue,
+  uploadCode,
 } from "./common.js";
 
 interface DeploymentResult {
@@ -49,6 +50,15 @@ async function main(): Promise<void> {
     const signer = await loadSigner(deployerSuri);
     console.log(`👤 Deployer: ${signer.address}`);
 
+    // Upload the election wasm so governance can instantiate it cross-contract.
+    const electionArtifact = loadArtifact("tusdt_election");
+    const electionCodeHash = await uploadCode(
+      client,
+      signer,
+      electionArtifact.wasmHex,
+      "tusdt_election",
+    );
+
     const artifact = loadArtifact("tusdt_governance");
     const deployer = new ContractDeployer(
       client,
@@ -57,7 +67,14 @@ async function main(): Promise<void> {
     );
 
     const salt = generateSalt();
-    const constructorArgs = [treasury, vault, auction, oracle, maintainer] as const;
+    const constructorArgs = [
+      treasury,
+      vault,
+      auction,
+      oracle,
+      maintainer,
+      electionCodeHash,
+    ] as const;
 
     console.log("🧪 Dry-running governance.new(...)");
     const dryRun = await (deployer.query as unknown as {
@@ -105,6 +122,7 @@ async function main(): Promise<void> {
           auction,
           oracle,
           maintainer,
+          electionCodeHash,
           deployer: signer.address,
         },
         null,
