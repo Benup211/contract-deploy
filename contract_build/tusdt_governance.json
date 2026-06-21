@@ -1,6 +1,6 @@
 {
   "source": {
-    "hash": "0x32984b6a62c67276bd567b46922f5d0c028f259294180b697b4326a81317dc0f",
+    "hash": "0xf7835ee8019bff24e974f199306b1b32afbdabb93b35fad9b473661a46e78926",
     "language": "ink! 5.1.1",
     "compiler": "rustc 1.91.1",
     "build_info": {
@@ -465,7 +465,9 @@
       {
         "args": [
           {
-            "docs": [],
+            "docs": [
+              "The cycle that was finalized."
+            ],
             "indexed": true,
             "label": "cycle_id",
             "type": {
@@ -476,7 +478,9 @@
             }
           },
           {
-            "docs": [],
+            "docs": [
+              "The winning candidate, or `None` if no candidate cleared the quorum and majority bars."
+            ],
             "indexed": false,
             "label": "winner",
             "type": {
@@ -487,7 +491,9 @@
             }
           },
           {
-            "docs": [],
+            "docs": [
+              "The subnet of the winner (or 0 if no winner)."
+            ],
             "indexed": false,
             "label": "netuid",
             "type": {
@@ -498,7 +504,9 @@
             }
           },
           {
-            "docs": [],
+            "docs": [
+              "The winning candidate's total approval weight."
+            ],
             "indexed": false,
             "label": "approval_weight",
             "type": {
@@ -509,7 +517,9 @@
             }
           },
           {
-            "docs": [],
+            "docs": [
+              "Total voting power that participated in the cycle."
+            ],
             "indexed": false,
             "label": "total_voting_power",
             "type": {
@@ -520,7 +530,9 @@
             }
           }
         ],
-        "docs": [],
+        "docs": [
+          "Emitted when an election cycle is finalized (with or without a winner)."
+        ],
         "label": "ElectionFinalized",
         "module_path": "tusdt_election::election",
         "signature_topic": "0x2362953c9ca9f810903b5835cb61731fc290ad09c58055a2dad1467f8ef5f8ba"
@@ -528,7 +540,9 @@
       {
         "args": [
           {
-            "docs": [],
+            "docs": [
+              "The new cycle's identifier (monotonically increasing)."
+            ],
             "indexed": true,
             "label": "cycle_id",
             "type": {
@@ -539,7 +553,9 @@
             }
           },
           {
-            "docs": [],
+            "docs": [
+              "Whether this cycle was triggered as an emergency election."
+            ],
             "indexed": false,
             "label": "emergency",
             "type": {
@@ -550,7 +566,9 @@
             }
           },
           {
-            "docs": [],
+            "docs": [
+              "Timestamp when the election was scheduled."
+            ],
             "indexed": false,
             "label": "scheduled_at",
             "type": {
@@ -561,7 +579,9 @@
             }
           }
         ],
-        "docs": [],
+        "docs": [
+          "Emitted when a new election cycle is opened by [`schedule_election`](TusdtElection::schedule_election)."
+        ],
         "label": "ElectionScheduled",
         "module_path": "tusdt_election::election",
         "signature_topic": "0xe147b1f29f4a35a9625e680bd58fca5c4f3cc2e63272859df07697f39a383ed6"
@@ -569,7 +589,9 @@
       {
         "args": [
           {
-            "docs": [],
+            "docs": [
+              "The subnet the maintainer is migrating from."
+            ],
             "indexed": false,
             "label": "from_netuid",
             "type": {
@@ -580,7 +602,9 @@
             }
           },
           {
-            "docs": [],
+            "docs": [
+              "The subnet the maintainer is migrating to."
+            ],
             "indexed": false,
             "label": "to_netuid",
             "type": {
@@ -591,7 +615,9 @@
             }
           },
           {
-            "docs": [],
+            "docs": [
+              "Timestamp when the transition period ends."
+            ],
             "indexed": false,
             "label": "ends_at",
             "type": {
@@ -602,7 +628,9 @@
             }
           }
         ],
-        "docs": [],
+        "docs": [
+          "Emitted when a cross-subnet migration period begins (elected maintainer governs a different subnet)."
+        ],
         "label": "TransitionStarted",
         "module_path": "tusdt_election::election",
         "signature_topic": "0xfd590abee3028af8fc1c81dc48c76b205cf7b5f9842746f6a981f052d8fc93d9"
@@ -610,7 +638,9 @@
       {
         "args": [
           {
-            "docs": [],
+            "docs": [
+              "The cycle in which the candidate registered."
+            ],
             "indexed": true,
             "label": "cycle_id",
             "type": {
@@ -621,7 +651,9 @@
             }
           },
           {
-            "docs": [],
+            "docs": [
+              "The candidate's account (coldkey)."
+            ],
             "indexed": true,
             "label": "candidate",
             "type": {
@@ -632,7 +664,9 @@
             }
           },
           {
-            "docs": [],
+            "docs": [
+              "The subnet the candidate claims to govern."
+            ],
             "indexed": false,
             "label": "netuid",
             "type": {
@@ -643,7 +677,9 @@
             }
           }
         ],
-        "docs": [],
+        "docs": [
+          "Emitted when a candidate successfully registers for the current cycle."
+        ],
         "label": "CandidateRegistered",
         "module_path": "tusdt_election::election",
         "signature_topic": "0xf534a8d5cc2c3645a836a8fa08bd3a604cdfc6d1725bc602b4691bfa46f156b9"
@@ -651,7 +687,9 @@
       {
         "args": [
           {
-            "docs": [],
+            "docs": [
+              "The cycle from which the maintainer was activated."
+            ],
             "indexed": true,
             "label": "cycle_id",
             "type": {
@@ -662,7 +700,9 @@
             }
           },
           {
-            "docs": [],
+            "docs": [
+              "The newly installed maintainer account."
+            ],
             "indexed": true,
             "label": "new_maintainer",
             "type": {
@@ -673,7 +713,9 @@
             }
           },
           {
-            "docs": [],
+            "docs": [
+              "The governing subnet after activation."
+            ],
             "indexed": false,
             "label": "active_netuid",
             "type": {
@@ -684,7 +726,9 @@
             }
           }
         ],
-        "docs": [],
+        "docs": [
+          "Emitted when an elected maintainer is activated (installed in governance)."
+        ],
         "label": "MaintainerActivated",
         "module_path": "tusdt_election::election",
         "signature_topic": "0x69636dee45db7e1620dfc1e0fc55dc79b2f7332414e8f50a976fd08a9df14515"
@@ -692,7 +736,9 @@
       {
         "args": [
           {
-            "docs": [],
+            "docs": [
+              "The incumbent maintainer who triggered the emergency."
+            ],
             "indexed": true,
             "label": "triggered_by",
             "type": {
@@ -703,7 +749,9 @@
             }
           }
         ],
-        "docs": [],
+        "docs": [
+          "Emitted when the incumbent triggers an emergency election, bypassing the cadence anchor."
+        ],
         "label": "EmergencyElectionTriggered",
         "module_path": "tusdt_election::election",
         "signature_topic": "0xfc362976000d79c7179b457c8397ae2e764801498c518c6f3caef3768492a948"
@@ -711,7 +759,9 @@
       {
         "args": [
           {
-            "docs": [],
+            "docs": [
+              "The election cycle the vote belongs to."
+            ],
             "indexed": true,
             "label": "cycle_id",
             "type": {
@@ -722,7 +772,9 @@
             }
           },
           {
-            "docs": [],
+            "docs": [
+              "The candidate receiving the approval."
+            ],
             "indexed": true,
             "label": "candidate",
             "type": {
@@ -733,7 +785,9 @@
             }
           },
           {
-            "docs": [],
+            "docs": [
+              "The voting coldkey (caller)."
+            ],
             "indexed": true,
             "label": "coldkey",
             "type": {
@@ -744,7 +798,9 @@
             }
           },
           {
-            "docs": [],
+            "docs": [
+              "The quadratic time-staked voting power cast for this candidate."
+            ],
             "indexed": false,
             "label": "weight",
             "type": {
@@ -755,7 +811,9 @@
             }
           }
         ],
-        "docs": [],
+        "docs": [
+          "Emitted when a token holder casts an approval vote for a candidate."
+        ],
         "label": "ApprovalCast",
         "module_path": "tusdt_election::election",
         "signature_topic": "0xfc7c759b60d199c651ffbcb9ecb3ce6cf88c846eeab1c68df3bc8ae9caf19b93"
@@ -763,7 +821,9 @@
       {
         "args": [
           {
-            "docs": [],
+            "docs": [
+              "The subnet now governing."
+            ],
             "indexed": false,
             "label": "netuid",
             "type": {
@@ -774,7 +834,9 @@
             }
           }
         ],
-        "docs": [],
+        "docs": [
+          "Emitted when a cross-subnet migration completes and the netuid switch takes effect."
+        ],
         "label": "TransitionEnded",
         "module_path": "tusdt_election::election",
         "signature_topic": "0x58ff161107462f9a1afa737f46099d645e036fac315e9633acb61f4e4310b35d"
@@ -2990,7 +3052,8 @@
         "default": false,
         "docs": [
           " Submits a new proposal. The caller is treated as the coldkey; `hotkey` is provided",
-          " explicitly and the pair's subnet alpha stake must exceed `MIN_PROPOSER_ALPHA_STAKE`."
+          " explicitly and the pair's subnet alpha stake must exceed",
+          " `params.min_proposer_stake`, configurable via `update_params()`."
         ],
         "label": "submit_proposal",
         "mutates": true,

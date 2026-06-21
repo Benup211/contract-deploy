@@ -1,6 +1,6 @@
 {
   "source": {
-    "hash": "0x6735399aef8228bd451e64b38416a2e1fabd24ed88bb95844f8d99dc29d7d4e4",
+    "hash": "0x3fd7ddac05ad53435b11919e9a12dae5fe921c6077ec3d58d0030aebe78a2823",
     "language": "ink! 5.1.1",
     "compiler": "rustc 1.91.1",
     "build_info": {
@@ -1596,7 +1596,7 @@
         ],
         "default": false,
         "docs": [
-          " Updates the platform (pause-capable operator) account; governance-only."
+          " Updates the platform (pause-capable operator) account; callable by governance account"
         ],
         "label": "update_platform",
         "mutates": true,
