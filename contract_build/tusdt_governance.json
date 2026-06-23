@@ -1,6 +1,6 @@
 {
   "source": {
-    "hash": "0xf7835ee8019bff24e974f199306b1b32afbdabb93b35fad9b473661a46e78926",
+    "hash": "0x097261e72ac20bc76673717f87b3e5ad6687930232fc22093e5a0e017debe94a",
     "language": "ink! 5.1.1",
     "compiler": "rustc 1.91.1",
     "build_info": {
@@ -132,7 +132,7 @@
         "displayName": [
           "ChainExtension"
         ],
-        "type": 73
+        "type": 74
       },
       "hash": {
         "displayName": [
@@ -1276,6 +1276,48 @@
         "args": [
           {
             "docs": [],
+            "indexed": false,
+            "label": "min_submitter_stake",
+            "type": {
+              "displayName": [
+                "u128"
+              ],
+              "type": 7
+            }
+          }
+        ],
+        "docs": [
+          "Emitted when the minimum required submitter stake is changed."
+        ],
+        "label": "MinSubmitterStakeUpdated",
+        "module_path": "tusdt_oracle::oracle",
+        "signature_topic": "0x862f9b8f733953c288061b3a21bb6955a625374e5f24afe32da33fd31a38aa7f"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
+            "indexed": false,
+            "label": "netuid",
+            "type": {
+              "displayName": [
+                "u16"
+              ],
+              "type": 4
+            }
+          }
+        ],
+        "docs": [
+          "Emitted when the governing subnet netuid is updated."
+        ],
+        "label": "NetuidUpdated",
+        "module_path": "tusdt_oracle::oracle",
+        "signature_topic": "0xb62491ff2dec7341b9b30f90adc6a7fcd382e6284c444b7f9622622efbd4aad7"
+      },
+      {
+        "args": [
+          {
+            "docs": [],
             "indexed": true,
             "label": "round_id",
             "type": {
@@ -1313,7 +1355,7 @@
             "label": "metadata",
             "type": {
               "displayName": [
-                "Option"
+                "PriceSubmissionMetadata"
               ],
               "type": 71
             }
@@ -1335,7 +1377,7 @@
         ],
         "label": "PriceSubmitted",
         "module_path": "tusdt_oracle::oracle",
-        "signature_topic": "0x25f17f4539e2597560baeb472abb3a2dc3b00b74ca6456857ed6b775d04d9ae5"
+        "signature_topic": "0x497680a9a4c789ade85efa9afe6ea64b9412ae83fe310b3bba847320c2263059"
       },
       {
         "args": [
@@ -1401,38 +1443,6 @@
         "label": "RoundCommitted",
         "module_path": "tusdt_oracle::oracle",
         "signature_topic": "0xe1b90df25e0fce7ca266a459bd155d63871c00c2f7e4247c092a175ab900c081"
-      },
-      {
-        "args": [
-          {
-            "docs": [],
-            "indexed": true,
-            "label": "reporter",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 0
-            }
-          },
-          {
-            "docs": [],
-            "indexed": false,
-            "label": "enabled",
-            "type": {
-              "displayName": [
-                "bool"
-              ],
-              "type": 46
-            }
-          }
-        ],
-        "docs": [
-          "Emitted when a reporter is enabled or disabled."
-        ],
-        "label": "ReporterUpdated",
-        "module_path": "tusdt_oracle::oracle",
-        "signature_topic": "0xd418423978c9fba185e0ab908177d71f060b16543e3d7aa68822799de1dcf3c6"
       },
       {
         "args": [
@@ -2708,6 +2718,62 @@
       {
         "args": [
           {
+            "label": "netuid",
+            "type": {
+              "displayName": [
+                "u16"
+              ],
+              "type": 4
+            }
+          }
+        ],
+        "default": false,
+        "docs": [
+          " Updates the governing subnet netuid for the oracle; maintainer-only."
+        ],
+        "label": "oracle_set_netuid",
+        "mutates": true,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 47
+        },
+        "selector": "0x50ccd462"
+      },
+      {
+        "args": [
+          {
+            "label": "min_stake",
+            "type": {
+              "displayName": [
+                "u128"
+              ],
+              "type": 7
+            }
+          }
+        ],
+        "default": false,
+        "docs": [
+          " Updates the minimum submitter stake threshold for the oracle; maintainer-only."
+        ],
+        "label": "oracle_set_min_submitter_stake",
+        "mutates": true,
+        "payable": false,
+        "returnType": {
+          "displayName": [
+            "ink",
+            "MessageResult"
+          ],
+          "type": 47
+        },
+        "selector": "0xfa8ab1ea"
+      },
+      {
+        "args": [
+          {
             "label": "admin",
             "type": {
               "displayName": [
@@ -3038,22 +3104,12 @@
               ],
               "type": 17
             }
-          },
-          {
-            "label": "hotkey",
-            "type": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 0
-            }
           }
         ],
         "default": false,
         "docs": [
-          " Submits a new proposal. The caller is treated as the coldkey; `hotkey` is provided",
-          " explicitly and the pair's subnet alpha stake must exceed",
-          " `params.min_proposer_stake`, configurable via `update_params()`."
+          " Submits a new proposal. Only council members may submit. Proposals are",
+          " accepted during the configured day-of-month window (UTC, inclusive)."
         ],
         "label": "submit_proposal",
         "mutates": true,
@@ -5894,45 +5950,17 @@
       "id": 71,
       "type": {
         "def": {
-          "variant": {
-            "variants": [
-              {
-                "index": 0,
-                "name": "None"
-              },
-              {
-                "fields": [
-                  {
-                    "type": 72
-                  }
-                ],
-                "index": 1,
-                "name": "Some"
-              }
-            ]
-          }
-        },
-        "params": [
-          {
-            "name": "T",
-            "type": 72
-          }
-        ],
-        "path": [
-          "Option"
-        ]
-      }
-    },
-    {
-      "id": 72,
-      "type": {
-        "def": {
           "composite": {
             "fields": [
               {
                 "name": "hot_key",
                 "type": 0,
                 "typeName": "AccountId"
+              },
+              {
+                "name": "provider",
+                "type": 72,
+                "typeName": "Option<Vec<u8>>"
               }
             ]
           }
@@ -5945,7 +5973,50 @@
       }
     },
     {
+      "id": 72,
+      "type": {
+        "def": {
+          "variant": {
+            "variants": [
+              {
+                "index": 0,
+                "name": "None"
+              },
+              {
+                "fields": [
+                  {
+                    "type": 73
+                  }
+                ],
+                "index": 1,
+                "name": "Some"
+              }
+            ]
+          }
+        },
+        "params": [
+          {
+            "name": "T",
+            "type": 73
+          }
+        ],
+        "path": [
+          "Option"
+        ]
+      }
+    },
+    {
       "id": 73,
+      "type": {
+        "def": {
+          "sequence": {
+            "type": 2
+          }
+        }
+      }
+    },
+    {
+      "id": 74,
       "type": {
         "def": {
           "variant": {}

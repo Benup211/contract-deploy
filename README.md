@@ -3,7 +3,7 @@
 ## Deploying Vault
 
 ```bash
-pnpm deploy:vault --treasury <ss58_address>
+pnpm deploy:vault --treasury <ss58_address> --netuid <netuid>
 ```
 ## Deploying Treasury
 

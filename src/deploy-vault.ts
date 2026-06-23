@@ -27,6 +27,12 @@ async function main(): Promise<void> {
     getCliFlag("--treasury") ?? process.env.TREASURY_ADDRESS,
     "--treasury / TREASURY_ADDRESS (treasury AccountId for vault)",
   );
+  const netuid = Number(
+    requireValue(
+      getCliFlag("--netuid") ?? process.env.NETUID,
+      "--netuid / NETUID (Bittensor subnet netuid for oracle)",
+    ),
+  );
 
   console.log(`🔌 Connecting to ${wsEndpoint}`);
   const client = await connect(wsEndpoint);
@@ -74,6 +80,7 @@ async function main(): Promise<void> {
       tokenCodeHash,
       auctionCodeHash,
       oracleCodeHash,
+      netuid,
     ] as const;
 
     console.log("🧪 Dry-running vault.new(...)");
@@ -130,6 +137,7 @@ async function main(): Promise<void> {
           auction: auctionAddr,
           oracle: oracleAddr,
           treasury,
+          netuid,
           deployer: signer.address,
           codeHashes: {
             token: tokenCodeHash,
